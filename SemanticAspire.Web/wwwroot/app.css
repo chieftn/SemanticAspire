@@ -57,15 +57,37 @@ h1:focus {
     text-align: start;
 }
 
-.layout-view {
+.layout-main {
+    display: flex;
     height: 100vh;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.layout-main-center {
+    flex-grow: 3;
+    height: 100%;
+    overflow: auto;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 12px;
+}
+
+.layout-main-center-far {
+    overflow: auto;
+    flex-grow: 4;
+}
+
+.layout-view {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .layout-view-center {
-    height: 100%;
-    overflow: auto;
+    flex-grow: 4;
 }
 
-.layout-view-main {
-    overflow: auto;
-}
+
