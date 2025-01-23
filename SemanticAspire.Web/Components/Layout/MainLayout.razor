@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+﻿@using SemanticAspire.Web.Components.Controls
+@inherits LayoutComponentBase
 
 <div>
     <FluentStack 
@@ -7,19 +8,19 @@
         Class="layout-view">
         
         <FluentHeader><h1>Azure IoT Operations</h1></FluentHeader>
+        
         <FluentStack 
             Orientation="Orientation.Horizontal" 
             VerticalAlignment="VerticalAlignment.Stretch" 
             Class="layout-view-center">
-            <nav>
-                <FluentNavLink Href="/"
-                    Icon="@(new Icons.Regular.Size16.Globe())"
-                    aria-label="home" />
-            </nav>
+        
+            <GlobalNavigation/>
             <main class="layout-view-main">
                 @Body
             </main>
+        
         </FluentStack>
+        
         <FluentFooter>
             <div>https://github.com/chieftn/SemanticAspire</div>
         </FluentFooter>
