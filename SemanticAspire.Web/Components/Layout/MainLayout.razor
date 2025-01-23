@@ -1,23 +1,29 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
-    <main>
-        <FluentToastProvider />
-        <FluentDialogProvider />
-        <FluentTooltipProvider />
-        <FluentMessageBarProvider />
-        <FluentMenuProvider />
+<div>
+    <FluentStack 
+        Orientation="Orientation.Vertical" 
+        HorizontalAlignment="HorizontalAlignment.Stretch" 
+        Class="layout-view">
         
-      
-
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
+        <FluentHeader><h1>Azure IoT Operations</h1></FluentHeader>
+        <FluentStack 
+            Orientation="Orientation.Horizontal" 
+            VerticalAlignment="VerticalAlignment.Stretch" 
+            Class="layout-view-center">
+            <nav>
+                <FluentNavLink Href="/"
+                    Icon="@(new Icons.Regular.Size16.Globe())"
+                    aria-label="home" />
+            </nav>
+            <main class="layout-view-main">
+                @Body
+            </main>
+        </FluentStack>
+        <FluentFooter>
+            <div>https://github.com/chieftn/SemanticAspire</div>
+        </FluentFooter>
+    </FluentStack>
 </div>
 
 <div id="blazor-error-ui">
