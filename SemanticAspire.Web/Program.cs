@@ -1,3 +1,4 @@
+using Microsoft.FluentUI.AspNetCore.Components;
 using SemanticAspire.Web;
 using SemanticAspire.Web.Components;
 
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add service defaults & Aspire client integrations.
 builder.AddServiceDefaults();
 builder.AddRedisOutputCache("cache");
+builder.Services.AddFluentUIComponents();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

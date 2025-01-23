@@ -12,6 +12,8 @@
 
   <ItemGroup>
     <PackageReference Include="Aspire.StackExchange.Redis.OutputCaching" Version="9.0.0" />
+    <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.11.3" />
+    <PackageReference Include="Microsoft.FluentUI.AspNetCore.Templates" Version="4.11.3" />
   </ItemGroup>
 
 </Project>
