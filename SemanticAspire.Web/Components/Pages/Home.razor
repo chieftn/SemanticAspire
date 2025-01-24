@@ -6,9 +6,9 @@
 
 <div class="layout-view">
     <div class="chat-view-center">
-        @foreach (var response in responses)
+        @foreach (var prompt in prompts)
         {
-            <div>@response.response</div>
+            <SemanticAspire.Web.Components.Controls.ChatInteraction Prompt=@prompt/>
         }
     </div>
 
@@ -21,6 +21,7 @@
             Appearance="FluentInputAppearance.Filled"
             Immediate=true
             Autofocus=true
+            AutoComplete="off"
             />
 
             <div class="chat-prompt-commands">
@@ -28,25 +29,32 @@
                 Disabled="String.IsNullOrWhiteSpace(prompt)"
                 IconStart="@(new Icons.Regular.Size16.Send())"
                 Appearance="Appearance.Stealth"
-                OnClick="SubmitPromptAsync"/>
+                OnClick="SubmitPrompt"/>
             </div>
         </div>
     </div>
 </div>
 
 @code {
-    List<PromptMachine> machines = [];
+    List<string> prompts = [];
     string? prompt;
 
-
-
-    void SubmitPromptAsync()
+    void SubmitPrompt()
     {
-        var machine = new PromptMachine(ChatClient) { Prompt = prompt };
-        this.machines.Add(machine);
-
-        prompt = string.Empty;
+        if (!String.IsNullOrWhiteSpace(prompt)) 
+        {
+            prompts.Add(prompt);
+            prompt = String.Empty;
+        }
     }
-}
+
+    // void OnEnter(KeyboardEventArgs e)
+    // {
+    //     if (e.Code == "Enter" || e.Code == "NumpadEnter")
+    //     {
+    //         this.SubmitPrompt();
+    //     }
+    // }
+ }
 
 
