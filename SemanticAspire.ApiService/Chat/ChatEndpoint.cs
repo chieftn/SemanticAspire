@@ -2,6 +2,8 @@ using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
+using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace SemanticAspire.ApiService;
 
@@ -20,9 +22,11 @@ internal static class ChatEndpoint
     }
 
     private static async Task<IResult> GetChatCompletionAsync(
-       SecretClient client,
-       string prompt,
-       CancellationToken cancellationToken)
+        SecretClient client,
+        ChatRequest chatRequest,
+        [EnumeratorCancellation]
+        CancellationToken cancellationToken
+        )
     {
         var builder = Kernel.CreateBuilder();
         builder.AddAzureOpenAIChatCompletion(
@@ -34,18 +38,20 @@ internal static class ChatEndpoint
         Kernel kernel = builder.Build();
 
         ChatHistory history = [];
-        history.AddUserMessage("Hello, how are you?");
+        history.AddUserMessage(chatRequest.Prompt);
 
         var chat = kernel.GetRequiredService<IChatCompletionService>();
-        var response = await chat.GetChatMessageContentAsync(
-            history,
-            kernel: kernel
-        );
+
+        var response = new StringBuilder();
+        await foreach (var result in chat.GetStreamingChatMessageContentsAsync(history))
+        {
+            response.Append(result.Content);
+        }
 
         return Results.Ok(new
         {
-            prompt,
-            response
+            prompt = chatRequest.Prompt,
+            response = response.ToString()
         });
     }
 }
