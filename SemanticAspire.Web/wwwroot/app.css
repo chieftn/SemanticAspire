@@ -86,8 +86,26 @@ h1:focus {
     gap: 12px;
 }
 
-.layout-view-center {
+.chat-view-center {
     flex-grow: 4;
 }
 
+.chat-view-bottom {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
 
+.chat-prompt {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 2;
+    margin-inline-start: 20%;
+    margin-inline-end: 20%;
+}
+
+.chat-prompt-commands {
+    display: flex;
+    width: 100%;
+    justify-content: end;
+}

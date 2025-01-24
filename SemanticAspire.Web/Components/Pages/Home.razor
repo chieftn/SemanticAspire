@@ -5,7 +5,7 @@
 <PageTitle>Home</PageTitle>
 
 <div class="layout-view">
-    <div class="layout-view-center">
+    <div class="chat-view-center">
         @foreach (var response in responses)
         {
             <div>@response.response</div>
@@ -13,20 +13,39 @@
     </div>
 
 
-    <div >
-        <FluentTextField @bind-Value=prompt Placeholder="Message Aspire" />
-        <FluentButton Appearance="Appearance.Stealth" OnClick="SubmitPromptAsync">Prompt</FluentButton>
+    <div class="chat-view-bottom" >
+        <div class="chat-prompt">
+            <FluentTextField 
+            @bind-Value=prompt 
+            Placeholder="Message IoT Operations" 
+            Appearance="FluentInputAppearance.Filled"
+            Immediate=true
+            Autofocus=true
+            />
+
+            <div class="chat-prompt-commands">
+                <FluentButton
+                Disabled="String.IsNullOrWhiteSpace(prompt)"
+                IconStart="@(new Icons.Regular.Size16.Send())"
+                Appearance="Appearance.Stealth"
+                OnClick="SubmitPromptAsync"/>
+            </div>
+        </div>
     </div>
 </div>
 
 @code {
-    List<PromptResponse> responses = [];
+    List<PromptMachine> machines = [];
     string? prompt;
 
-    async Task SubmitPromptAsync()
+
+
+    void SubmitPromptAsync()
     {
-        var result = await ChatClient.PostPromptAsync(prompt);
-		this.responses.Add(result);
+        var machine = new PromptMachine(ChatClient) { Prompt = prompt };
+        this.machines.Add(machine);
+
+        prompt = string.Empty;
     }
 }
 
