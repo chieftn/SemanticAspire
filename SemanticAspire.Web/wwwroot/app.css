@@ -88,6 +88,8 @@ h1:focus {
 
 .chat-view-center {
     flex-grow: 4;
+    margin-inline-start: 20%;
+    margin-inline-end: 20%;
 }
 
 .chat-view-bottom {
@@ -108,4 +110,27 @@ h1:focus {
     display: flex;
     width: 100%;
     justify-content: end;
+}
+
+.chat-interaction {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-block-end: 16px;
+}
+
+.chat-interaction-prompt {
+    display: inline-flex;
+    flex-direction: row-reverse;
+    
+}
+
+.chat-interaction-prompt-content {
+    background-color: #b4d6fa;
+    border-radius: 6px;
+    padding: 8px;
+}
+
+.chat-interaction-response {
+
 }

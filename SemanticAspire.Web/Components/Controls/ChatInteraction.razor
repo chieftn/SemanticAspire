@@ -1,7 +1,11 @@
 ﻿@inject ChatApiClient ChatClient
 
-<div>@Prompt</div>
-<div>@response</div>
+<div class="chat-interaction">
+	<div class="chat-interaction-prompt">
+		<div class="chat-interaction-prompt-content">@Prompt</div>
+	</div>
+	<div class="chat-interaction-response">@response</div>
+</div>
 
 @code {
 	[Parameter]

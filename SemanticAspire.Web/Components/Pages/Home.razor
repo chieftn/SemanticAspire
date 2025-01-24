@@ -12,24 +12,23 @@
         }
     </div>
 
-
     <div class="chat-view-bottom" >
         <div class="chat-prompt">
             <FluentTextField 
-            @bind-Value=prompt 
-            Placeholder="Message IoT Operations" 
-            Appearance="FluentInputAppearance.Filled"
-            Immediate=true
-            Autofocus=true
-            AutoComplete="off"
-            />
+                @bind-Value=prompt
+                @onkeypress="OnEnter"
+                Immediate=true
+                Placeholder="Message IoT Operations" 
+                Appearance="FluentInputAppearance.Filled"
+                Autofocus=true
+                AutoComplete="off"/>
 
             <div class="chat-prompt-commands">
                 <FluentButton
-                Disabled="String.IsNullOrWhiteSpace(prompt)"
-                IconStart="@(new Icons.Regular.Size16.Send())"
-                Appearance="Appearance.Stealth"
-                OnClick="SubmitPrompt"/>
+                    Disabled="String.IsNullOrWhiteSpace(prompt)"
+                    IconStart="@(new Icons.Regular.Size16.Send())"
+                    Appearance="Appearance.Stealth"
+                    OnClick="SubmitPrompt"/>
             </div>
         </div>
     </div>
@@ -48,13 +47,13 @@
         }
     }
 
-    // void OnEnter(KeyboardEventArgs e)
-    // {
-    //     if (e.Code == "Enter" || e.Code == "NumpadEnter")
-    //     {
-    //         this.SubmitPrompt();
-    //     }
-    // }
+    void OnEnter(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            this.SubmitPrompt();
+        }
+    }
  }
 
 
