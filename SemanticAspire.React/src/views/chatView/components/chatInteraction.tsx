@@ -1,4 +1,5 @@
 import * as React from 'react';
+import type { Prompt } from '@/shared/models/chat';
 import { makeStyles, tokens } from '@fluentui/react-components';
 
 export const useStyles = makeStyles({
@@ -14,19 +15,24 @@ export const useStyles = makeStyles({
     },
     promptTextStyle: {
         backgroundColor: tokens.colorBrandBackgroundInvertedSelected,
-        borderRadius: tokens.borderRadiusSmall,
+        borderRadius: tokens.borderRadiusMedium,
         paddingInline: tokens.spacingHorizontalS,
         paddingBlock: tokens.spacingVerticalS,
     },
     responseStyle: {},
 });
 
-export const UserInteraction: React.FC = () => {
+export interface ChatInteractionProps {
+    prompt: Prompt;
+}
+export const ChatInteraction: React.FC<ChatInteractionProps> = ({ prompt }) => {
     const { rootStyle, promptStyle, promptTextStyle, responseStyle } = useStyles();
+    const { text } = prompt;
+
     return (
         <div className={rootStyle}>
             <div className={promptStyle}>
-                <div className={promptTextStyle}>prompt</div>
+                <div className={promptTextStyle}>{text}</div>
             </div>
             <div className={responseStyle}>response</div>
         </div>
