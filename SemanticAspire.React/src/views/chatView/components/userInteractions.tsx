@@ -3,7 +3,7 @@ import { UserInteraction } from './userInteraction';
 
 export const UserInteractions: React.FC = () => {
     return (
-        <ul>
+        <div style={{ paddingInline: '20%' }}>
             <UserInteraction />
             <UserInteraction />
             <UserInteraction />
@@ -28,6 +28,6 @@ export const UserInteractions: React.FC = () => {
             <UserInteraction />
             <UserInteraction />
             <UserInteraction />
-        </ul>
+        </div>
     );
 };

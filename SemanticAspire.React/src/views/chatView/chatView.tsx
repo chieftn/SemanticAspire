@@ -4,5 +4,5 @@ import { UserPrompt } from './components/userPrompt';
 import { UserInteractions } from './components/userInteractions';
 
 export const ChatView: React.FC = () => {
-    return <ViewLayout body={<UserInteractions />} footer={<UserPrompt />} />;
+    return <ViewLayout body={<UserInteractions />} footer={<UserPrompt onSubmit={() => console.log('here')} />} />;
 };
