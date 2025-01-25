@@ -4,6 +4,6 @@ export interface Prompt {
 }
 
 export interface ChatInteraction {
-    prompt: Prompt;
-    response?: string;
+    prompt: string;
+    response: string;
 }

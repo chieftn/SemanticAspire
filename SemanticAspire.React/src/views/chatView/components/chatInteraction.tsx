@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type { Prompt } from '@/shared/models/chat';
 import { makeStyles, tokens } from '@fluentui/react-components';
+import { useChatInteractionQuery } from '../data/useChatInteractionQuery';
 
 export const useStyles = makeStyles({
     rootStyle: {
@@ -27,6 +28,7 @@ export interface ChatInteractionProps {
 }
 export const ChatInteraction: React.FC<ChatInteractionProps> = ({ prompt }) => {
     const { rootStyle, promptStyle, promptTextStyle, responseStyle } = useStyles();
+    const { data, status } = useChatInteractionQuery(prompt);
     const { text } = prompt;
 
     return (
@@ -34,7 +36,10 @@ export const ChatInteraction: React.FC<ChatInteractionProps> = ({ prompt }) => {
             <div className={promptStyle}>
                 <div className={promptTextStyle}>{text}</div>
             </div>
-            <div className={responseStyle}>response</div>
+            <div className={responseStyle}>
+                <div>{status}</div>
+                <div>{data?.response || 'nothing'}</div>
+            </div>
         </div>
     );
 };
