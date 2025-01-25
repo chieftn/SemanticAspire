@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { FluentProvider, webLightTheme } from '@fluentui/react-components';
+import { MainLayout } from '@/shared/components/mainLayout';
 
 export const App: React.FC = () => {
     React.useEffect(() => {
@@ -12,5 +14,12 @@ export const App: React.FC = () => {
         me();
     })
 
-    return <div>Hello world 2</div>;
-}
+    return (
+        <FluentProvider theme={webLightTheme}>
+           <MainLayout
+                header={<div>Chat1</div>}
+                body={<div>hello chat</div>}
+           />
+        </FluentProvider>
+    );
+};
