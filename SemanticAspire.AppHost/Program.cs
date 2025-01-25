@@ -7,14 +7,16 @@ var secrets =
         ? builder.AddAzureKeyVault("secrets")
         : builder.AddConnectionString("secrets");
 
+
 var apiService = builder.AddProject<Projects.SemanticAspire_ApiService>("apiservice")
     .WithReference(secrets);
 
-builder.AddProject<Projects.SemanticAspire_Web>("webfrontend")
+// builder.AddDockerfile("web", "../SemanticAspire.React", "DockerFile");
+
+builder.AddNpmApp("react", "../SemanticAspire.React")
+    .WithEnvironment("BROWSER", "none") // Disable opening browser on npm start
+    .WithHttpEndpoint(env: "PORT")
     .WithExternalHttpEndpoints()
-    .WithReference(cache)
-    .WaitFor(cache)
-    .WithReference(apiService)
-    .WaitFor(apiService);
+    .PublishAsDockerFile();
 
 builder.Build().Run();

@@ -16,7 +16,6 @@
         <div class="chat-prompt">
             <FluentTextField 
                 @bind-Value=prompt
-                @onkeypress="OnEnter"
                 Immediate=true
                 Placeholder="Message IoT Operations" 
                 Appearance="FluentInputAppearance.Filled"
@@ -47,13 +46,13 @@
         }
     }
 
-    void OnEnter(KeyboardEventArgs e)
-    {
-        if (e.Code == "Enter" || e.Code == "NumpadEnter")
-        {
-            this.SubmitPrompt();
-        }
-    }
+    // void OnEnter(KeyboardEventArgs e)
+    // {
+    //     if (e.Code == "Enter" || e.Code == "NumpadEnter")
+    //     {
+    //         this.SubmitPrompt();
+    //     }
+    // }
  }
 
 
