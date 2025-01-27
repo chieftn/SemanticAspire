@@ -23,7 +23,7 @@ internal static class ChatEndpoint
 
     private static async Task<IResult> GetChatCompletionAsync(
         ChatHistoryService chatHistory,
-        SecretClient client,
+        SecretClient secretClient,
         ChatRequest chatRequest,
         [EnumeratorCancellation]
         CancellationToken cancellationToken
@@ -39,7 +39,13 @@ internal static class ChatEndpoint
 
         Kernel kernel = builder.Build();
 
-        ChatHistory history = [];
+        var history = await chatHistory.GetAsync<ChatHistory>("chat");
+        if (history == null)
+        {
+            history = new ChatHistory();
+            history.AddSystemMessage("you are the dude from the big lebowski");
+        }
+
         history.AddUserMessage(chatRequest.Prompt);
 
         var chat = kernel.GetRequiredService<IChatCompletionService>();
@@ -49,6 +55,8 @@ internal static class ChatEndpoint
         {
             response.Append(result.Content);
         }
+
+        await chatHistory.SaveAsync("chat", history, new TimeSpan(1, 0, 0));
 
         return Results.Ok(new
         {

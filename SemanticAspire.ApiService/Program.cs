@@ -26,10 +26,4 @@ app.MapSecretsEndpoints();
 app.MapChatEndpoints();
 app.MapDefaultEndpoints();
 
-//app.MapGet("/redis/ping", async (IConnectionMultiplexer connection) =>
-//{
-//    return await connection.GetDatabase().PingAsync();
-//});
-
-
 app.Run();
