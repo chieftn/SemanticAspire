@@ -1,14 +1,14 @@
 import * as React from 'react';
 import type { Prompt } from '@/shared/models/chat';
 import { makeStyles, tokens } from '@fluentui/react-components';
-import { useChatInteractionQuery } from '../data/useChatInteractionQuery';
+import { ChatResponse } from './chatRresponse';
 
 export const useStyles = makeStyles({
     rootStyle: {
         display: 'flex',
         flexDirection: 'column',
-        gap: tokens.spacingVerticalS,
-        marginBlockEnd: tokens.spacingVerticalM,
+        gap: tokens.spacingVerticalL,
+        marginBlockEnd: tokens.spacingVerticalXXXL,
     },
     promptStyle: {
         display: 'inline-flex',
@@ -20,15 +20,13 @@ export const useStyles = makeStyles({
         paddingInline: tokens.spacingHorizontalS,
         paddingBlock: tokens.spacingVerticalS,
     },
-    responseStyle: {},
 });
 
 export interface ChatInteractionProps {
     prompt: Prompt;
 }
 export const ChatInteraction: React.FC<ChatInteractionProps> = ({ prompt }) => {
-    const { rootStyle, promptStyle, promptTextStyle, responseStyle } = useStyles();
-    const { data, status } = useChatInteractionQuery(prompt);
+    const { rootStyle, promptStyle, promptTextStyle } = useStyles();
     const { text } = prompt;
 
     return (
@@ -36,10 +34,7 @@ export const ChatInteraction: React.FC<ChatInteractionProps> = ({ prompt }) => {
             <div className={promptStyle}>
                 <div className={promptTextStyle}>{text}</div>
             </div>
-            <div className={responseStyle}>
-                <div>{status}</div>
-                <div>{data?.response || 'nothing'}</div>
-            </div>
+            <ChatResponse prompt={prompt} />
         </div>
     );
 };
