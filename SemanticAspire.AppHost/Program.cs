@@ -1,6 +1,6 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var cache = builder.AddRedis("cache");
+var cache = builder.AddRedis("cache").WithRedisInsight();
 
 var secrets =
     builder.ExecutionContext.IsPublishMode
@@ -9,7 +9,8 @@ var secrets =
 
 
 var apiService = builder.AddProject<Projects.SemanticAspire_ApiService>("apiservice")
-    .WithReference(secrets);
+    .WithReference(secrets)
+    .WithReference(cache);
 
 builder.AddNpmApp("react", "../SemanticAspire.React")
     .WithReference(apiService)

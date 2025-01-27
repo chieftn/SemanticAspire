@@ -7,12 +7,14 @@ builder.AddServiceDefaults();
 
 builder.Configuration.AddAzureKeyVaultSecrets("secrets");
 builder.AddAzureKeyVaultClient("secrets");
+builder.AddRedisClient(connectionName: "cache");
 
 // Add services to the container.
 builder.Services.AddProblemDetails();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddChatHistoryService();
 
 var app = builder.Build();
 
@@ -23,4 +25,5 @@ app.UseExceptionHandler();
 app.MapSecretsEndpoints();
 app.MapChatEndpoints();
 app.MapDefaultEndpoints();
+
 app.Run();
