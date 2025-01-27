@@ -1,0 +1,30 @@
+{
+  "name": "semantic-react",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=20.12"
+  },
+  "scripts": {
+    "build": "tsc && vite build",
+    "start": "run-script-os",
+    "start:win32": "vite --port %PORT%",
+    "start:default": "vite --port $PORT"
+  },
+  "dependencies": {
+    "@fluentui/react-components": "^9.56.4",
+    "@fluentui/react-nav-preview": "^0.11.0",
+    "@tanstack/react-query": "^5.64.2",
+    "@tanstack/react-query-devtools": "^5.64.2",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.13",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "run-script-os": "^1.1.6",
+    "typescript": "^5.7.3",
+    "vite": "^6.0.11"
+  }
+}

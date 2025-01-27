@@ -1,0 +1,23 @@
+﻿@inject ChatApiClient ChatClient
+
+<div class="chat-interaction">
+	<div class="chat-interaction-prompt">
+		<div class="chat-interaction-prompt-content">@Prompt</div>
+	</div>
+	<div class="chat-interaction-response">@response</div>
+</div>
+
+@code {
+	[Parameter]
+	public string Prompt { get; set; }
+
+	string? response;
+
+	protected override async Task OnInitializedAsync()
+	{
+		await base.OnInitializedAsync();
+
+		var result = await ChatClient.PostPromptAsync(this.Prompt);
+		response = result.response;
+	}
+}

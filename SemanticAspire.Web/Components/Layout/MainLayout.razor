@@ -1,19 +1,22 @@
-﻿@inherits LayoutComponentBase
+﻿@using SemanticAspire.Web.Components.Controls
+@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
+<div class="layout-main">
+        
+    <FluentHeader>Azure IoT Operations</FluentHeader>
+        
+    <div class="layout-main-center">
+        
+        <GlobalNavigation/>
+        
+        <main class="layout-main-center-far">
             @Body
-        </article>
-    </main>
+        </main>
+    </div>
+        
+    <FluentFooter>
+        <div>https://github.com/chieftn/SemanticAspire</div>
+    </FluentFooter>
 </div>
 
 <div id="blazor-error-ui">

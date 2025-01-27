@@ -1,5 +1,7 @@
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    height: 100vh;
+    overflow: hidden;
 }
 
 a, .btn-link {
@@ -53,4 +55,82 @@ h1:focus {
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
+}
+
+.layout-main {
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.layout-main-center {
+    flex-grow: 3;
+    height: 100%;
+    overflow: auto;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 12px;
+}
+
+.layout-main-center-far {
+    overflow: auto;
+    flex-grow: 4;
+}
+
+.layout-view {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.chat-view-center {
+    flex-grow: 4;
+    margin-inline-start: 20%;
+    margin-inline-end: 20%;
+}
+
+.chat-view-bottom {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.chat-prompt {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 2;
+    margin-inline-start: 20%;
+    margin-inline-end: 20%;
+}
+
+.chat-prompt-commands {
+    display: flex;
+    width: 100%;
+    justify-content: end;
+}
+
+.chat-interaction {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-block-end: 16px;
+}
+
+.chat-interaction-prompt {
+    display: inline-flex;
+    flex-direction: row-reverse;
+    
+}
+
+.chat-interaction-prompt-content {
+    background-color: #b4d6fa;
+    border-radius: 6px;
+    padding: 8px;
+}
+
+.chat-interaction-response {
+
 }

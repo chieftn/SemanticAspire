@@ -1,7 +1,58 @@
 ﻿@page "/"
+@rendermode InteractiveServer
+@inject ChatApiClient ChatClient
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="layout-view">
+    <div class="chat-view-center">
+        @foreach (var prompt in prompts)
+        {
+            <SemanticAspire.Web.Components.Controls.ChatInteraction Prompt=@prompt/>
+        }
+    </div>
 
-Welcome to your new app.
+    <div class="chat-view-bottom" >
+        <div class="chat-prompt">
+            <FluentTextField 
+                @bind-Value=prompt
+                Immediate=true
+                Placeholder="Message IoT Operations" 
+                Appearance="FluentInputAppearance.Filled"
+                Autofocus=true
+                AutoComplete="off"/>
+
+            <div class="chat-prompt-commands">
+                <FluentButton
+                    Disabled="String.IsNullOrWhiteSpace(prompt)"
+                    IconStart="@(new Icons.Regular.Size16.Send())"
+                    Appearance="Appearance.Stealth"
+                    OnClick="SubmitPrompt"/>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    List<string> prompts = [];
+    string? prompt;
+
+    void SubmitPrompt()
+    {
+        if (!String.IsNullOrWhiteSpace(prompt)) 
+        {
+            prompts.Add(prompt);
+            prompt = String.Empty;
+        }
+    }
+
+    // void OnEnter(KeyboardEventArgs e)
+    // {
+    //     if (e.Code == "Enter" || e.Code == "NumpadEnter")
+    //     {
+    //         this.SubmitPrompt();
+    //     }
+    // }
+ }
+
+
