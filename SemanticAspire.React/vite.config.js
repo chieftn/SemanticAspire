@@ -13,16 +13,9 @@ export default defineConfig({
     server: {
         proxy: {
             '/api': {
-                target: process.env.services__apiservice__http__0, //'http://localhost:5350', // `http://localhost:${process.env.PORT}`, //5350
+                target: process.env.services__apiservice__http__0,
                 changeOrigin: true,
                 secure: false,
-                // rewrite: (path) => path.replace(/^\/api/, ''),
-                // target: 'http://localhost:5350',
-                // changeOrigin: true,
-                // rewrite: (path) => path.replace(/^\/api/, ''),
-                // configure: (proxy, options) => {
-                //     // proxy will be an instance of 'http-proxy'
-                //   },
             },
         },
     },
