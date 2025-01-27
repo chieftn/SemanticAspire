@@ -10,7 +10,7 @@ namespace SemanticAspire.ApiService;
 internal static class ChatEndpoint
 {
     internal static WebApplication MapChatEndpoints(
-       this WebApplication app)
+        this WebApplication app)
     {
         var chat = app.MapGroup("api/chat");
 
@@ -22,12 +22,14 @@ internal static class ChatEndpoint
     }
 
     private static async Task<IResult> GetChatCompletionAsync(
+        ChatHistoryService chatHistory,
         SecretClient client,
         ChatRequest chatRequest,
         [EnumeratorCancellation]
         CancellationToken cancellationToken
         )
     {
+
         var builder = Kernel.CreateBuilder();
         builder.AddAzureOpenAIChatCompletion(
            "gpt-4",
