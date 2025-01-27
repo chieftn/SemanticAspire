@@ -12,6 +12,7 @@ var apiService = builder.AddProject<Projects.SemanticAspire_ApiService>("apiserv
     .WithReference(secrets);
 
 builder.AddNpmApp("react", "../SemanticAspire.React")
+    .WithReference(apiService)
     .WithEnvironment("BROWSER", "none") // Disable opening browser on npm start
     .WithHttpEndpoint(env: "PORT")
     .WithExternalHttpEndpoints()
