@@ -1,4 +1,5 @@
 export interface Prompt {
+    sessionId: string;
     id: string;
     text: string;
 }

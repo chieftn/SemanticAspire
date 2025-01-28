@@ -7,10 +7,12 @@ import { UserPrompt } from './components/userPrompt';
 import { ChatInteractions } from './components/chatInteractions';
 
 export const ChatView: React.FC = () => {
+    const [sessionId] = useStateCache<string>({ cacheKeyName: 'sessionId' }, getUUID());
     const [prompts, setPrompts] = useStateCache<Prompt[]>({ cacheKeyName: 'prompts' }, []);
 
     const onPrompt = (value: string) => {
         const prompt = {
+            sessionId,
             id: getUUID(),
             text: value,
         };

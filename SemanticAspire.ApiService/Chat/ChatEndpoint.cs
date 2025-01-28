@@ -29,17 +29,16 @@ internal static class ChatEndpoint
         CancellationToken cancellationToken
         )
     {
-
         var builder = Kernel.CreateBuilder();
         builder.AddAzureOpenAIChatCompletion(
            "gpt-4",
            "https://aoai-vzac3zroquyd4.services.ai.azure.com/",
-           new AzureCliCredential());
+           new DefaultAzureCredential());
 
 
         Kernel kernel = builder.Build();
 
-        var history = await chatHistory.GetAsync<ChatHistory>("chat");
+        var history = await chatHistory.GetAsync<ChatHistory>(chatRequest.SessionId);
         if (history == null)
         {
             history = new ChatHistory();
@@ -47,7 +46,6 @@ internal static class ChatEndpoint
         }
 
         history.AddUserMessage(chatRequest.Prompt);
-
         var chat = kernel.GetRequiredService<IChatCompletionService>();
 
         var response = new StringBuilder();
@@ -56,7 +54,7 @@ internal static class ChatEndpoint
             response.Append(result.Content);
         }
 
-        await chatHistory.SaveAsync("chat", history, new TimeSpan(1, 0, 0));
+        await chatHistory.SaveAsync(chatRequest.SessionId, history, new TimeSpan(1, 0, 0));
 
         return Results.Ok(new
         {
