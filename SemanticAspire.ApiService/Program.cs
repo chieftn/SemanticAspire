@@ -24,6 +24,7 @@ app.UseStaticFiles();
 app.UseExceptionHandler();
 app.MapSecretsEndpoints();
 app.MapChatEndpoints();
+app.MapPretzelEndpoints();
 app.MapDefaultEndpoints();
 
 app.Run();
