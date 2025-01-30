@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Markdown from 'react-markdown';
 import { makeStyles, tokens } from '@fluentui/react-components';
 import type { Prompt } from '@/shared/models/chat';
 import { useChatInteractionQuery } from '../data/useChatInteractionQuery';
@@ -26,7 +27,11 @@ export const ChatResponse: React.FC<ChatResponseProps> = ({ prompt }) => {
             <div>
                 {status === 'error' && <ChatResponseError />}
                 {status === 'pending' && <ChatResponsePending />}
-                {status === 'success' && <div>{data?.response}</div>}
+                {status === 'success' && (
+                    <div>
+                        <Markdown>{data?.response}</Markdown>
+                    </div>
+                )}
             </div>
         </div>
     );
