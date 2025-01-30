@@ -28,9 +28,16 @@ export interface ChatInteractionProps {
 export const ChatInteraction: React.FC<ChatInteractionProps> = ({ prompt }) => {
     const { rootStyle, promptStyle, promptTextStyle } = useStyles();
     const { text } = prompt;
+    const scrollToRef = React.useRef<HTMLDivElement>(null);
+
+    React.useEffect(() => {
+        if (scrollToRef.current) {
+            scrollToRef.current?.scrollIntoView();
+        }
+    }, []);
 
     return (
-        <div className={rootStyle}>
+        <div className={rootStyle} ref={scrollToRef}>
             <div className={promptStyle}>
                 <div className={promptTextStyle}>{text}</div>
             </div>
