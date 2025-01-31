@@ -7,7 +7,9 @@ import { ChatInteractionsEmpty } from './chatInteractionsEmpty';
 export const useStyles = makeStyles({
     rootStyle: {
         marginBlockStart: tokens.spacingVerticalM,
+        marginBlockEnd: tokens.spacingVerticalM,
         paddingInline: '20%',
+        height: 'calc(100% - 70px)',
     },
 });
 
