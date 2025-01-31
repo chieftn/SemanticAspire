@@ -4,7 +4,9 @@ import { AddItemIcon } from '@/shared/components/addItemIcon';
 
 export const useStyles = makeStyles({
     rootStyle: {
-        marginInline: 'auto',
+        alignContent: 'center',
+        height: '100%',
+        margin: 'auto',
         textAlign: 'center',
     },
 });

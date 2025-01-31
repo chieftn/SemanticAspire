@@ -2,7 +2,7 @@ import { MIME_TYPES, HTTP_OPERATIONS } from '../utils/serviceHelper';
 import type { Prompt, ChatInteraction } from '../models/chat';
 
 export const postPrompt = async (prompt: Prompt): Promise<ChatInteraction> => {
-    const response = await fetch('/api/pretzels/', {
+    const response = await fetch(`/api/${prompt.endpoint || 'chat'}`, {
         body: JSON.stringify({ prompt: prompt.text, sessionId: prompt.sessionId }),
         headers: new Headers({
             Accept: MIME_TYPES.APPLICATION_JSON,
