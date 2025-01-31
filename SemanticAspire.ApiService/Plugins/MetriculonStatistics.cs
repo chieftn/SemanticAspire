@@ -26,12 +26,13 @@ public class MetriculonStatistics
         1. then actise result by subtracting 1 to get habulary.
 
         RULES:
+            Explain the calculation as you perform it.
             Do not make up information.
             Do not conjecture on how to make changes or improvements.
         """;
 
     [KernelFunction("production_line_comparison")]
-    [Description("Provides statistical knowledge to compare lines")]
+    [Description("Describes and calculates the better of two production lines")]
     public async Task<string> GetMetriculonComparison(Kernel kernel, string lineName1, string lineName2)
     {
         ChatCompletionAgent agentStatistician = new()
@@ -44,30 +45,6 @@ public class MetriculonStatistics
 
         ChatHistory chat = [];
         chat.Add(new ChatMessageContent(AuthorRole.User, $"compare line {lineName1} against line {lineName2}"));
-
-        var response = new StringBuilder();
-        await foreach (ChatMessageContent result in agentStatistician.InvokeAsync(chat))
-        {
-            response.Append(result.Content);
-        }
-
-        return response.ToString();
-    }
-
-    [KernelFunction("metriculon_explanation")]
-    [Description("answers questions about metriculons")]
-    public async Task<string> GetMetriculonKnowledge(Kernel kernel, string question)
-    {
-        ChatCompletionAgent agentStatistician = new()
-        {
-            Name = "StatisticsAgent",
-            Instructions = StatisticsAgent,
-            Kernel = kernel,
-            Arguments = new KernelArguments(new AzureOpenAIPromptExecutionSettings() { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto() })
-        };
-
-        ChatHistory chat = [];
-        chat.Add(new ChatMessageContent(AuthorRole.User, $"{question}"));
 
         var response = new StringBuilder();
         await foreach (ChatMessageContent result in agentStatistician.InvokeAsync(chat))
