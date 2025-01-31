@@ -6,12 +6,16 @@ import { getUUID } from '@/shared/utils/cryptoHelper';
 import { UserPrompt } from './components/userPrompt';
 import { ChatInteractions } from './components/chatInteractions';
 
-export const ChatView: React.FC = () => {
+export interface ChatViewProps {
+    endpoint?: string;
+}
+export const ChatView: React.FC<ChatViewProps> = ({ endpoint }) => {
     const [sessionId] = useStateCache<string>({ cacheKeyName: 'sessionId' }, getUUID());
     const [prompts, setPrompts] = useStateCache<Prompt[]>({ cacheKeyName: 'prompts' }, []);
 
     const onPrompt = (value: string) => {
         const prompt = {
+            endpoint,
             sessionId,
             id: getUUID(),
             text: value,

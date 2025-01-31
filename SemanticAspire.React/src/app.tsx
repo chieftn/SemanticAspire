@@ -2,11 +2,8 @@ import * as React from 'react';
 import { FluentProvider, webLightTheme } from '@fluentui/react-components';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { MainLayout } from '@/shared/components/mainLayout';
-import { Masthead } from '@/shared/components/masthead';
-import { Navigation } from '@/shared/components/navigation';
-import { Footer } from '@/shared/components/footer';
-import { ChatView } from '@/views/chatView/chatView';
+import { RouterProvider, createRouter } from '@tanstack/react-router';
+import { routeTree } from './routeTree.gen';
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -20,11 +17,21 @@ const queryClient = new QueryClient({
     },
 });
 
+// Create a new router instance
+const router = createRouter({ routeTree });
+
+// Register the router instance for type safety
+declare module '@tanstack/react-router' {
+    interface Register {
+        router: typeof router;
+    }
+}
+
 export const App: React.FC = () => {
     return (
         <QueryClientProvider client={queryClient}>
             <FluentProvider theme={webLightTheme}>
-                <MainLayout header={<Masthead />} body={<ChatView />} footer={<Footer />} navigation={<Navigation />} />
+                <RouterProvider router={router} />
             </FluentProvider>
             <ReactQueryDevtools />
         </QueryClientProvider>

@@ -1,5 +1,4 @@
-﻿using Azure.Identity;
-using Azure.Security.KeyVault.Secrets;
+﻿using Azure.Security.KeyVault.Secrets;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.ChatCompletion;
@@ -35,9 +34,9 @@ internal static class PretzelEndpoint
     {
         var builder = Kernel.CreateBuilder();
         builder.AddAzureOpenAIChatCompletion(
-           "gpt-4",
-           "https://aoai-vzac3zroquyd4.services.ai.azure.com/",
-           new DefaultAzureCredential());
+            "gpt-4",
+            "https://aoai-vzac3zroquyd4.services.ai.azure.com/",
+            secretClient.GetSecret("gp4-endpoint-key").Value.Value);
 
         builder.Plugins.AddFromType<PretzelStatistics>();
         builder.Plugins.AddFromType<MetriculonStatistics>();
