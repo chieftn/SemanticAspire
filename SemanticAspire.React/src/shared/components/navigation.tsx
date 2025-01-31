@@ -1,35 +1,43 @@
 import * as React from 'react';
 import { PreviewLink20Filled, PreviewLink20Regular, bundleIcon } from '@fluentui/react-icons';
-import { makeStyles } from '@fluentui/react-components';
-import { NavDrawer, NavDrawerBody, NavItem, type OnNavItemSelectData } from '@fluentui/react-nav-preview';
+import { Tooltip, mergeClasses } from '@fluentui/react-components';
+import {
+    NavDrawer,
+    NavDrawerBody,
+    NavDrawerHeader,
+    NavItem,
+    Hamburger,
+    type OnNavItemSelectData,
+} from '@fluentui/react-nav-preview';
 import { useLocation, useNavigate } from '@tanstack/react-router';
+import { useBannerButtonStyles } from '../styles/useBannerButtonStyles';
 
 const PerformanceReviews = bundleIcon(PreviewLink20Filled, PreviewLink20Regular);
 
-const useStyles = makeStyles({
-    rootStyle: {
-        height: '100%',
-    },
-});
-
 export const Navigation: React.FC = () => {
-    const { rootStyle } = useStyles();
+    const [open, setOpen] = React.useState<boolean>(false);
     const { pathname } = useLocation();
     const navigate = useNavigate();
+    const { bannerButton, focusIndicator } = useBannerButtonStyles();
+
+    const renderHamburgerWithToolTip = (location?: 'banner') => {
+        const className = location === 'banner' ? mergeClasses(bannerButton, focusIndicator) : undefined;
+        return (
+            <Tooltip content="Navigation" relationship="label">
+                <Hamburger className={className} onClick={() => setOpen(!open)} />
+            </Tooltip>
+        );
+    };
 
     const onSelect = (ev: Event | React.SyntheticEvent<Element, Event>, data: OnNavItemSelectData) => {
         navigate({ to: data.value });
+        setOpen(false);
     };
 
     return (
-        <div className={rootStyle}>
-            <NavDrawer
-                selectedValue={pathname}
-                open={true}
-                type="inline"
-                onNavItemSelect={onSelect}
-                className={rootStyle}
-            >
+        <>
+            <NavDrawer selectedValue={pathname} open={open} type="overlay" onNavItemSelect={onSelect}>
+                <NavDrawerHeader>{renderHamburgerWithToolTip()}</NavDrawerHeader>
                 <NavDrawerBody>
                     <NavItem icon={<PerformanceReviews />} value="/">
                         Home
@@ -39,6 +47,7 @@ export const Navigation: React.FC = () => {
                     </NavItem>
                 </NavDrawerBody>
             </NavDrawer>
-        </div>
+            {!open && renderHamburgerWithToolTip('banner')}
+        </>
     );
 };
