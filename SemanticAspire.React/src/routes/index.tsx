@@ -7,5 +7,5 @@ export const Route = createFileRoute('/')({
 });
 
 function RouteComponent() {
-    return <ChatView />;
+    return <ChatView key={'chat'} />;
 }

@@ -7,5 +7,5 @@ export const Route = createFileRoute('/pretzels')({
 });
 
 function RouteComponent() {
-    return <ChatView endpoint={'pretzels'} />;
+    return <ChatView key={'pretzels'} endpoint={'pretzels'} />;
 }

@@ -10,8 +10,8 @@ export interface ChatViewProps {
     endpoint?: string;
 }
 export const ChatView: React.FC<ChatViewProps> = ({ endpoint }) => {
-    const [sessionId] = useStateCache<string>({ cacheKeyName: 'sessionId' }, getUUID());
-    const [prompts, setPrompts] = useStateCache<Prompt[]>({ cacheKeyName: 'prompts' }, []);
+    const [sessionId] = useStateCache<string>({ cacheKeyName: `sessionId_${endpoint || ''}` }, getUUID());
+    const [prompts, setPrompts] = useStateCache<Prompt[]>({ cacheKeyName: `prompts_${sessionId}` }, []);
 
     const onPrompt = (value: string) => {
         const prompt = {
