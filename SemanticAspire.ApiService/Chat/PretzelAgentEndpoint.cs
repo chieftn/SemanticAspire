@@ -9,12 +9,12 @@ using System.Text;
 
 namespace SemanticAspire.ApiService;
 
-internal static class PretzelEndpoint
+internal static class PretzelAgentEndpoint
 {
-    internal static WebApplication MapPretzelEndpoints(
+    internal static WebApplication MapPretzelAgentEndpoints(
         this WebApplication app)
     {
-        var chat = app.MapGroup("api/pretzels");
+        var chat = app.MapGroup("api/pretzel");
 
         chat.MapPost(
             pattern: "/",

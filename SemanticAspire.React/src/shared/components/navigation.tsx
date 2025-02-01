@@ -42,8 +42,11 @@ export const Navigation: React.FC = () => {
                     <NavItem icon={<PerformanceReviews />} value="/">
                         Home
                     </NavItem>
-                    <NavItem icon={<PerformanceReviews />} value="/pretzels">
-                        Pretzels
+                    <NavItem icon={<PerformanceReviews />} value="/pretzelAgent">
+                        Pretzel Agent
+                    </NavItem>
+                    <NavItem icon={<PerformanceReviews />} value="/pretzelAgents">
+                        Pretzel Agents
                     </NavItem>
                 </NavDrawerBody>
             </NavDrawer>
