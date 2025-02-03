@@ -5,8 +5,6 @@ using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using SemanticAspire.Plugins;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Text.Json;
 
 namespace SemanticAspire.ApiService;
 
@@ -53,36 +51,34 @@ internal static class IncidentEndpoint
         builder.Plugins.AddFromType<TroubleshootPlugin>("SearchPlugin");
         Kernel kernel = builder.Build();
 
-        var arguments = new KernelArguments
-        {
-            ["searchFields"] = JsonSerializer.Serialize(new List<string> { "text_vector" }),
-            ["search"] = "create icm",
-            ["collection"] = "vector-tsg"
-        };
-
-        var promptTemplate = """
-            {{search $search collection=$collection searchFields=$searchFields}}
-            Write a summary of the provided text in the voice of a valley girl.
-            Include citations to the relevant information where it is referenced in the response.
-        """;
+        var systemMessage =
+            $$$"""
+                You are Aioki, a helpful assisant for Azure IoT Operations problem resolution.
+                You format technical questions into a search query and summarize results.
+                You use only result from search to form your response.
+                Your responses should be helpful text and cite sources.
+                You do not create generative creative content.
+                You do not conjecture or make up information.
+                You respond with 'I could not find any helpful info' when search results are not available.
+            """;
 
         var history = await chatHistory.GetAsync<ChatHistory>(chatRequest.SessionId);
+
         if (history == null)
         {
             history = new ChatHistory();
-            history.AddSystemMessage("You help users investigate root cause for incidents", );
+            history.AddSystemMessage(systemMessage);
         }
 
         history.AddUserMessage(chatRequest.Prompt);
         var chat = kernel.GetRequiredService<IChatCompletionService>();
 
-        var response = new StringBuilder();
-        await foreach (var result in chat.GetStreamingChatMessageContentsAsync(history))
+        PromptExecutionSettings promptExecutionSettings = new()
         {
-            response.Append(result.Content);
-        }
+            FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
+        };
 
-        // await chatHistory.SaveAsync(chatRequest.SessionId, history, new TimeSpan(1, 0, 0));
+        var response = await chat.GetChatMessageContentAsync(history, promptExecutionSettings, kernel);
 
         return Results.Ok(new
         {
