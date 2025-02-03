@@ -29,25 +29,6 @@ class TroubleshootPlugin
 
         ReadOnlyMemory<float> embedding = await this._textEmbeddingGenerationService.GenerateEmbeddingAsync(query, cancellationToken: cancellationToken);
 
-        //var arguments = new KernelArguments
-        //{
-        //    ["searchFields"] = JsonSerializer.Serialize(new List<string> { "text_vector" }),
-        //    ["search"] = "create icm",
-        //    ["collection"] = "vector-tsg"
-        //};
-
-        //var promptTemplate = """
-        //    {{search $search collection=$collection searchFields=$searchFields}}
-        //    Write a summary of the provided text in the voice of a valley girl.
-        //    Include citations to the relevant information where it is referenced in the response.
-        //""";
-
-        //var result2 = await kernel.InvokePromptAsync(
-        //    promptTemplate,
-        //    arguments);
-
-
-
         // Perform search
         var result = await this._searchService.SearchAsync(collection, embedding, searchFields, cancellationToken) ?? string.Empty;
         return result;
