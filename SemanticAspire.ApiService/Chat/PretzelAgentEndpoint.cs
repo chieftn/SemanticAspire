@@ -3,7 +3,7 @@ using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
-using SemanticConsole.Plugins;
+using SemanticAspire.Plugins;
 using System.Runtime.CompilerServices;
 using System.Text;
 

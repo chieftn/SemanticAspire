@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as PretzelAgentsImport } from './routes/pretzelAgents'
 import { Route as PretzelAgentImport } from './routes/pretzelAgent'
+import { Route as IncidentAgentImport } from './routes/incidentAgent'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
@@ -26,6 +27,12 @@ const PretzelAgentsRoute = PretzelAgentsImport.update({
 const PretzelAgentRoute = PretzelAgentImport.update({
   id: '/pretzelAgent',
   path: '/pretzelAgent',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const IncidentAgentRoute = IncidentAgentImport.update({
+  id: '/incidentAgent',
+  path: '/incidentAgent',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -44,6 +51,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/incidentAgent': {
+      id: '/incidentAgent'
+      path: '/incidentAgent'
+      fullPath: '/incidentAgent'
+      preLoaderRoute: typeof IncidentAgentImport
       parentRoute: typeof rootRoute
     }
     '/pretzelAgent': {
@@ -67,12 +81,14 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/incidentAgent': typeof IncidentAgentRoute
   '/pretzelAgent': typeof PretzelAgentRoute
   '/pretzelAgents': typeof PretzelAgentsRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/incidentAgent': typeof IncidentAgentRoute
   '/pretzelAgent': typeof PretzelAgentRoute
   '/pretzelAgents': typeof PretzelAgentsRoute
 }
@@ -80,27 +96,30 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/incidentAgent': typeof IncidentAgentRoute
   '/pretzelAgent': typeof PretzelAgentRoute
   '/pretzelAgents': typeof PretzelAgentsRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/pretzelAgent' | '/pretzelAgents'
+  fullPaths: '/' | '/incidentAgent' | '/pretzelAgent' | '/pretzelAgents'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/pretzelAgent' | '/pretzelAgents'
-  id: '__root__' | '/' | '/pretzelAgent' | '/pretzelAgents'
+  to: '/' | '/incidentAgent' | '/pretzelAgent' | '/pretzelAgents'
+  id: '__root__' | '/' | '/incidentAgent' | '/pretzelAgent' | '/pretzelAgents'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  IncidentAgentRoute: typeof IncidentAgentRoute
   PretzelAgentRoute: typeof PretzelAgentRoute
   PretzelAgentsRoute: typeof PretzelAgentsRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  IncidentAgentRoute: IncidentAgentRoute,
   PretzelAgentRoute: PretzelAgentRoute,
   PretzelAgentsRoute: PretzelAgentsRoute,
 }
@@ -116,12 +135,16 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/incidentAgent",
         "/pretzelAgent",
         "/pretzelAgents"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/incidentAgent": {
+      "filePath": "incidentAgent.tsx"
     },
     "/pretzelAgent": {
       "filePath": "pretzelAgent.tsx"

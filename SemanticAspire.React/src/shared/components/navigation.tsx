@@ -48,6 +48,9 @@ export const Navigation: React.FC = () => {
                     <NavItem icon={<PerformanceReviews />} value="/pretzelAgents">
                         Pretzel Agents
                     </NavItem>
+                    <NavItem icon={<PerformanceReviews />} value="/incidentAgent">
+                        Incident Guide
+                    </NavItem>
                 </NavDrawerBody>
             </NavDrawer>
             {!open && renderHamburgerWithToolTip('banner')}
