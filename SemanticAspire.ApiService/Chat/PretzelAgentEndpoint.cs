@@ -38,7 +38,6 @@ internal static class PretzelAgentEndpoint
             secretClient.GetSecret("gp4-endpoint-key").Value.Value);
 
         builder.Plugins.AddFromType<PretzelStatistics>();
-        // builder.Plugins.AddFromType<MetriculonStatistics>();
 
         Kernel kernel = builder.Build();
 

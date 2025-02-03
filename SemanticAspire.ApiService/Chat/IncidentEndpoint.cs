@@ -54,10 +54,11 @@ internal static class IncidentEndpoint
         var systemMessage =
             $$$"""
                 You are Aioki, a helpful assisant for Azure IoT Operations problem resolution.
+                All links should open in a new tab".
                 You format technical questions into a search query and summarize results.
-                You use only result from search to form your response.
+                You use only results from tools to form your response.
                 Your responses should be helpful text and cite sources.
-                You do not create generative creative content.
+                You do not create content.
                 You do not conjecture or make up information.
                 You respond with 'I could not find any helpful info' when search results are not available.
             """;
@@ -79,6 +80,7 @@ internal static class IncidentEndpoint
         };
 
         var response = await chat.GetChatMessageContentAsync(history, promptExecutionSettings, kernel);
+        await chatHistory.SaveAsync(chatRequest.SessionId, history, new TimeSpan(1, 0, 0));
 
         return Results.Ok(new
         {
