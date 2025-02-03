@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <NoWarn>$(NoWarn);CA2007;IDE1006;SKEXP0001;SKEXP0110;OPENAI001</NoWarn>
+    <NoWarn>$(NoWarn);CA2007;IDE1006;SKEXP0001;SKEXP0110;SKEXP0010,OPENAI001</NoWarn>
   </PropertyGroup>
   
   <ItemGroup>
@@ -16,6 +16,7 @@
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.1" />
     <PackageReference Include="Microsoft.SemanticKernel" Version="1.35.0" />
     <PackageReference Include="Microsoft.SemanticKernel.Agents.Core" Version="1.35.0-alpha" />
+    <PackageReference Include="Microsoft.SemanticKernel.Connectors.AzureAISearch" Version="1.35.0-preview" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
   </ItemGroup>
 

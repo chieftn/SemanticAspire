@@ -1,7 +1,7 @@
 ﻿using Microsoft.SemanticKernel;
 using System.ComponentModel;
 
-namespace SemanticConsole.Plugins;
+namespace SemanticAspire.Plugins;
 
 public class PretzelMeasure
 {

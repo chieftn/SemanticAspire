@@ -5,6 +5,7 @@ import type { Prompt } from '@/shared/models/chat';
 import { useChatInteractionQuery } from '../data/useChatInteractionQuery';
 import { ChatResponseError } from './chatResponseError';
 import { ChatResponsePending } from './chatResponsePending';
+import rehypeExternalLinks from 'rehype-external-links';
 
 export const useStyles = makeStyles({
     rootStyle: {},
@@ -29,7 +30,9 @@ export const ChatResponse: React.FC<ChatResponseProps> = ({ prompt }) => {
                 {status === 'pending' && <ChatResponsePending />}
                 {status === 'success' && (
                     <div>
-                        <Markdown>{data?.response}</Markdown>
+                        <Markdown rehypePlugins={[[rehypeExternalLinks, { target: '_blank' }]]}>
+                            {data?.response}
+                        </Markdown>
                     </div>
                 )}
             </div>

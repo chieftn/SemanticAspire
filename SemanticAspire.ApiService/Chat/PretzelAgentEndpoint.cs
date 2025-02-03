@@ -3,7 +3,7 @@ using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
-using SemanticConsole.Plugins;
+using SemanticAspire.Plugins;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -38,7 +38,6 @@ internal static class PretzelAgentEndpoint
             secretClient.GetSecret("gp4-endpoint-key").Value.Value);
 
         builder.Plugins.AddFromType<PretzelStatistics>();
-        // builder.Plugins.AddFromType<MetriculonStatistics>();
 
         Kernel kernel = builder.Build();
 
