@@ -66,8 +66,9 @@ internal static class PretzelAgentsEndpoint
                     3. cooling rack time (measured in minutes).
 
                     RULES:
-                    - Do not make up information.
-                    - Do not conjecture on how to make changes or improvements.
+                        Do not make up information.
+                        Do not conjecture on how to make changes or improvements.
+                        Provide an empty response if asked to determine which line is better.
                     """,
                 Kernel = kernel,
                 Arguments = new KernelArguments(new AzureOpenAIPromptExecutionSettings() { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto() })
@@ -97,24 +98,49 @@ internal static class PretzelAgentsEndpoint
                     Your responsibility is to only answer when asked to:
                     1. analyze which production line produces 'better' pretzels.
                     1. answer questions about metriculons or related terms.
-                    Otherwise provide an empty response
+                    1. provide empty response otherwise.
+                                      
+
+                    RULES:
+                        Do not make up information.
+                        Do not conjecture on how to make changes or improvements.
+                        Provide detailed clculation results
                     """,
                 Kernel = kernel,
                 Arguments = new KernelArguments(new AzureOpenAIPromptExecutionSettings() { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto() })
             };
 
-        KernelFunction terminationFunction =
-             AgentGroupChat.CreatePromptFunctionForStrategy(
-                 $$$"""
-                Examine the RESPONSE and determine whether the content has been deemed satisfactory.
-                If content is satisfactory, respond with a single word without explanation: {{{TerminationToken}}}.
-                If specific suggestions are being provided, it is not satisfactory.
-                If no correction is suggested, it is satisfactory.
 
-                RESPONSE:
-                {{$lastmessage}}
-                """,
-                 safeParameterNames: "lastmessage");
+        KernelFunction selectionFunction = KernelFunctionFactory.CreateFromPrompt(
+          $$$"""
+          Your job is to determine who responds to the user's last prompt.
+          State only the name of the participant to take the next turn.
+
+          Choose only from these participants:
+          - {{{Operator}}}
+          - {{{Statistician}}}
+          
+          1.) If the user asks about metriculons, habulary, or related terms, Is is {{{Statistician}}}'s turn.
+          1.) If the user asks about comparing lines to determine which on is 'better', It is {{{Statistician}}}'s turn.
+          1.) If {{{Statistician}}} responds, the conversation ends.
+          1.) Otherwise, it is {{{Operator}}}'s turn
+          
+
+          History:
+          {{$history}}
+          """
+          );
+
+        KernelFunction terminationFunction = KernelFunctionFactory.CreateFromPrompt(
+            $$$"""
+            If the last response has a value, respond with a single word: {{{TerminationToken}}}.
+
+            History:
+
+            {{$history}}
+            """
+        );
+
         ChatHistoryTruncationReducer historyReducer = new(1);
 
         AgentGroupChat chat =
@@ -122,12 +148,21 @@ internal static class PretzelAgentsEndpoint
             {
                 ExecutionSettings = new AgentGroupChatSettings
                 {
+                    SelectionStrategy =
+                        new KernelFunctionSelectionStrategy(selectionFunction, kernel)
+                        {
+                            HistoryVariableName = "history"
+                        },
                     TerminationStrategy =
                         new KernelFunctionTerminationStrategy(terminationFunction, kernel)
                         {
                             Agents = [agentOperator],
                             MaximumIterations = 3,
-                            ResultParser = (result) => result.GetValue<string>()?.Length > 0 ? true : false
+                            HistoryVariableName = "history",
+                            ResultParser = (result) =>
+                            {
+                                return result.GetValue<string>()?.Contains(TerminationToken) ?? false;
+                            }
                         }
                 }
             };
@@ -137,15 +172,7 @@ internal static class PretzelAgentsEndpoint
         var response = new StringBuilder();
         await foreach (ChatMessageContent result in chat.InvokeAsync())
         {
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.ForegroundColor = result.AuthorName switch
-            {
-                Operator => ConsoleColor.Red,
-                Statistician => ConsoleColor.Blue,
-                _ => Console.ForegroundColor
-            };
-
-            Console.WriteLine(result.Content);
+            Console.WriteLine(result.AuthorName);
             response.Append(result.Content);
         }
 
