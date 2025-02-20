@@ -1,8 +1,14 @@
 ﻿using Azure;
+using Azure.Monitor.OpenTelemetry.Exporter;
 using Azure.Search.Documents.Indexes;
 using Azure.Security.KeyVault.Secrets;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
+using OpenTelemetry;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using SemanticAspire.Plugins;
 using System.Runtime.CompilerServices;
 
@@ -30,7 +36,42 @@ internal static class IncidentEndpoint
         CancellationToken cancellationToken
         )
     {
+        var resourceBuilder = ResourceBuilder
+            .CreateDefault()
+            .AddService("SemanticAspireLogging");
+
+        // Enable model diagnostics with sensitive data.
+        AppContext.SetSwitch("Microsoft.SemanticKernel.Experimental.GenAI.EnableOTelDiagnosticsSensitive", true);
+        var connectionString = secretClient.GetSecret("insights-connection").Value.Value;
+
+        using var traceProvider = Sdk.CreateTracerProviderBuilder()
+            .SetResourceBuilder(resourceBuilder)
+            .AddSource("Microsoft.SemanticKernel*")
+            .AddAzureMonitorTraceExporter(options => options.ConnectionString = connectionString)
+            .Build();
+
+        using var meterProvider = Sdk.CreateMeterProviderBuilder()
+            .SetResourceBuilder(resourceBuilder)
+            .AddMeter("Microsoft.SemanticKernel*")
+            .AddAzureMonitorMetricExporter(options => options.ConnectionString = connectionString)
+            .Build();
+
+        using var loggerFactory = LoggerFactory.Create(builder =>
+        {
+            // Add OpenTelemetry as a logging provider
+            builder.AddOpenTelemetry(options =>
+            {
+                options.SetResourceBuilder(resourceBuilder);
+                options.AddAzureMonitorLogExporter(options => options.ConnectionString = connectionString);
+                // Format log messages. This is default to false.
+                options.IncludeFormattedMessage = true;
+                options.IncludeScopes = true;
+            });
+            builder.SetMinimumLevel(LogLevel.Information);
+        });
+
         var builder = Kernel.CreateBuilder();
+        builder.Services.AddSingleton(loggerFactory);
 
         Uri searchEndpoint = new("https://srch-vzac3zroquyd4.search.windows.net");
         AzureKeyCredential searchCredential = new(secretClient.GetSecret("search-key").Value.Value);
