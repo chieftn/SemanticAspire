@@ -5,16 +5,16 @@ using Azure.Search.Documents.Models;
 
 namespace SemanticAspire.ApiService;
 
-interface IAzureSearchService
+interface IAzureSearchService<T>
 {
-    Task<string?> SearchAsync(
+    Task<List<T>> SearchAsync(
         string collectionName,
         ReadOnlyMemory<float> vector,
         List<string>? searchFields = null,
         CancellationToken cancellationToken = default);
 }
 
-class AzureSearchService : IAzureSearchService
+class AzureSearchService<T> : IAzureSearchService<T>
 {
     private readonly List<string> _defaultVectorFields = new() { "text_vector" };
 
@@ -25,7 +25,7 @@ class AzureSearchService : IAzureSearchService
         this._indexClient = indexClient;
     }
 
-    public async Task<string?> SearchAsync(
+    public async Task<List<T>> SearchAsync(
         string collectionName,
         ReadOnlyMemory<float> vector,
         List<string>? searchFields = null,
@@ -44,20 +44,16 @@ class AzureSearchService : IAzureSearchService
         SearchOptions searchOptions = new() { VectorSearch = new() { Queries = { vectorQuery } } };
 
         // Perform search request
-        Response<SearchResults<DataModel>> response = await searchClient.SearchAsync<DataModel>(searchOptions, cancellationToken);
+        Response<SearchResults<T>> response = await searchClient.SearchAsync<T>(searchOptions, cancellationToken);
 
-        List<DataModel> results = new();
+        List<T> results = new();
 
         // Collect search results
-        await foreach (SearchResult<DataModel> result in response.Value.GetResultsAsync())
+        await foreach (SearchResult<T> result in response.Value.GetResultsAsync())
         {
             results.Add(result.Document);
         }
 
-        // Return text from first result.
-        // In real applications, the logic can check document score, sort and return top N results
-        // or aggregate all results in one text.
-        // The logic and decision which text data to return should be based on business scenario.
-        return results.FirstOrDefault()?.Chunk;
+        return results;
     }
 }

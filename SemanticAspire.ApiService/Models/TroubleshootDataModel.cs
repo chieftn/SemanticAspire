@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-class DataModel
+class TroubleshootDataModel
 {
     [JsonPropertyName("chunk_id")]
     public string? ChunkId { get; set; }

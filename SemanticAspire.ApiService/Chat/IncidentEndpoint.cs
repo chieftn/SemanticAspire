@@ -77,7 +77,8 @@ internal static class IncidentEndpoint
         AzureKeyCredential searchCredential = new(secretClient.GetSecret("search-key").Value.Value);
 
         builder.Services.AddSingleton<SearchIndexClient>((_) => new SearchIndexClient(searchEndpoint, searchCredential));
-        builder.Services.AddSingleton<IAzureSearchService, AzureSearchService>();
+        builder.Services.AddSingleton<IAzureSearchService<TroubleshootDataModel>, AzureSearchService<TroubleshootDataModel>>();
+        builder.Services.AddSingleton<IAzureSearchService<IcmDataModel>, AzureSearchService<IcmDataModel>>();
 
         builder.AddAzureOpenAIChatCompletion(
            "gpt-4",
@@ -89,19 +90,21 @@ internal static class IncidentEndpoint
           "https://aoai-vzac3zroquyd4.services.ai.azure.com/",
           secretClient.GetSecret("gp4-endpoint-key").Value.Value);
 
-        builder.Plugins.AddFromType<TroubleshootPlugin>("SearchPlugin");
+        // builder.Plugins.AddFromType<TroubleshootPlugin>("SearchPlugin");
+        builder.Plugins.AddFromType<IcmPlugin>("IcmPlugin");
+
         Kernel kernel = builder.Build();
 
         var systemMessage =
             $$$"""
                 You are Aioki, a helpful assisant for Azure IoT Operations problem resolution.
-                All links should open in a new tab".
                 You format technical questions into a search query and summarize results.
                 You use only results from tools to form your response.
                 Your responses should be helpful text and cite sources.
                 You do not create content.
                 You do not conjecture or make up information.
                 You respond with 'I could not find any helpful info' when search results are not available.
+                You always cite sources
             """;
 
         var history = await chatHistory.GetAsync<ChatHistory>(chatRequest.SessionId);

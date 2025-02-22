@@ -6,30 +6,30 @@ using System.ComponentModel;
 
 namespace SemanticAspire.Plugins;
 
-class TroubleshootPlugin
+class IcmPlugin
 {
     private readonly ITextEmbeddingGenerationService _textEmbeddingGenerationService;
     private readonly IChatCompletionService _chatCompletionService;
-    private readonly IAzureSearchService<TroubleshootDataModel> _searchService;
+    private readonly IAzureSearchService<IcmDataModel> _searchService;
 
-    public TroubleshootPlugin(
+    public IcmPlugin(
         ITextEmbeddingGenerationService textEmbeddingGenerationService,
         IChatCompletionService chatCompletionService,
-        IAzureSearchService<TroubleshootDataModel> searchService)
+        IAzureSearchService<IcmDataModel> searchService)
     {
         this._textEmbeddingGenerationService = textEmbeddingGenerationService;
         this._chatCompletionService = chatCompletionService;
         this._searchService = searchService;
     }
 
-    [KernelFunction("Azure_IoT_Knowledge_Base")]
-    [Description("provides authoritivate search results for Azure IoT Operations to help troubleshoot problems")]
+    [KernelFunction("Azure_IoT_Incident")]
+    [Description("provides information about past incidents (icms) for possible answers to current problems.")]
     public async Task<string?> SearchAsync(
         string query,
         CancellationToken cancellationToken = default)
     {
         var searchFields = new List<string> { "text_vector" };
-        var collection = "vector-tsgmd";
+        var collection = "vector-icmjson";
 
         ReadOnlyMemory<float> embedding = await this._textEmbeddingGenerationService.GenerateEmbeddingAsync(query, cancellationToken: cancellationToken);
 
@@ -41,10 +41,11 @@ class TroubleshootPlugin
         {
             formattedResult.AppendLine(
                 $"""
-                    # Search Result
-                    {result.Chunk}
-                    # Source
-                    {result.Title}
+                    Incident: {result.IncidentId}
+                    Incident type: {result.IncidentType}
+                    Incident description: {result.Chunk}
+                    Incident mitigation: {result.Mitigation}
+                    Incident resolution: {result.HowFixed}
                 """
             );
         }
