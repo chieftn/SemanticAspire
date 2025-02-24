@@ -39,9 +39,20 @@ class AzureSearchService<T> : IAzureSearchService<T>
 
         // Configure request parameters
         VectorizedQuery vectorQuery = new(vector);
+        vectorQuery.KNearestNeighborsCount = 5;
         fields.ForEach(field => vectorQuery.Fields.Add(field));
 
-        SearchOptions searchOptions = new() { VectorSearch = new() { Queries = { vectorQuery } } };
+        SearchOptions searchOptions = new()
+        {
+            // QueryType = SearchQueryType.Semantic,
+            VectorSearch = new() { Queries = { vectorQuery } },
+            //SemanticSearch = new SemanticSearchOptions()
+            //{
+            //    SemanticConfigurationName = "vector-icmjson2-semantic-configuration",
+            //    QueryCaption = new QueryCaption(QueryCaptionType.Extractive),
+            //    QueryAnswer = new QueryAnswer(QueryAnswerType.Extractive),
+            //}
+        };
 
         // Perform search request
         Response<SearchResults<T>> response = await searchClient.SearchAsync<T>(searchOptions, cancellationToken);
@@ -51,7 +62,10 @@ class AzureSearchService<T> : IAzureSearchService<T>
         // Collect search results
         await foreach (SearchResult<T> result in response.Value.GetResultsAsync())
         {
-            results.Add(result.Document);
+            if (result.Score > .85)
+            {
+                results.Add(result.Document);
+            }
         }
 
         return results;

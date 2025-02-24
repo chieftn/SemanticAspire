@@ -41,11 +41,14 @@ class IcmPlugin
         {
             formattedResult.AppendLine(
                 $"""
-                    Incident: {result.IncidentId}
-                    Incident type: {result.IncidentType}
-                    Incident description: {result.Chunk}
-                    Incident mitigation: {result.Mitigation}
-                    Incident resolution: {result.HowFixed}
+                    Incident:
+                    ID: {result.IncidentId}
+                    Title: {result.Title}
+                    Type: {result.IncidentType}
+                    Description: {result.Chunk}
+                    Mitigation: {result.Mitigation}
+                    Resolution: {result.HowFixed}
+                    TSG: {result.TsgId}
                 """
             );
         }
