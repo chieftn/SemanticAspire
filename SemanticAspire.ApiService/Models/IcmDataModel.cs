@@ -1,12 +1,5 @@
-﻿using System.Text.Json.Serialization;
-
-public class IcmDataModel
+﻿public class IcmDataModel : BaseModel
 {
-    [JsonPropertyName("chunk_id")]
-    public string ChunkId { get; set; }
-
-    [JsonPropertyName("chunk")]
-    public string Chunk { get; set; }
     public string TsgId { get; set; }
     public string Title { get; set; }
     public string Mitigation { get; set; }

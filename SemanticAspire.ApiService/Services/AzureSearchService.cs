@@ -5,16 +5,18 @@ using Azure.Search.Documents.Models;
 
 namespace SemanticAspire.ApiService;
 
-interface IAzureSearchService<T>
+interface IAzureSearchService<T> where T : BaseModel
 {
     Task<List<T>> SearchAsync(
         string collectionName,
         ReadOnlyMemory<float> vector,
+        string query,
+        string semanticConfiguration,
         List<string>? searchFields = null,
         CancellationToken cancellationToken = default);
 }
 
-class AzureSearchService<T> : IAzureSearchService<T>
+class AzureSearchService<T> : IAzureSearchService<T> where T : BaseModel
 {
     private readonly List<string> _defaultVectorFields = new() { "text_vector" };
 
@@ -28,6 +30,8 @@ class AzureSearchService<T> : IAzureSearchService<T>
     public async Task<List<T>> SearchAsync(
         string collectionName,
         ReadOnlyMemory<float> vector,
+        string query,
+        string? semanticConfiguration = null,
         List<string>? searchFields = null,
         CancellationToken cancellationToken = default)
     {
@@ -39,30 +43,30 @@ class AzureSearchService<T> : IAzureSearchService<T>
 
         // Configure request parameters
         VectorizedQuery vectorQuery = new(vector);
-        vectorQuery.KNearestNeighborsCount = 5;
         fields.ForEach(field => vectorQuery.Fields.Add(field));
 
         SearchOptions searchOptions = new()
         {
-            // QueryType = SearchQueryType.Semantic,
-            VectorSearch = new() { Queries = { vectorQuery } },
-            //SemanticSearch = new SemanticSearchOptions()
-            //{
-            //    SemanticConfigurationName = "vector-icmjson2-semantic-configuration",
-            //    QueryCaption = new QueryCaption(QueryCaptionType.Extractive),
-            //    QueryAnswer = new QueryAnswer(QueryAnswerType.Extractive),
-            //}
+            VectorSearch = new()
+            {
+                Queries = { vectorQuery }
+            },
+            SemanticSearch = new SemanticSearchOptions()
+            {
+                SemanticConfigurationName = semanticConfiguration,
+                QueryCaption = new QueryCaption(QueryCaptionType.Extractive),
+                QueryAnswer = new QueryAnswer(QueryAnswerType.Extractive),
+            }
         };
 
         // Perform search request
-        Response<SearchResults<T>> response = await searchClient.SearchAsync<T>(searchOptions, cancellationToken);
+        Response<SearchResults<T>> response = await searchClient.SearchAsync<T>(query, searchOptions, cancellationToken);
+        HashSet<string> idSet = response.Value.SemanticSearch.Answers.Select(item => item.Key).ToHashSet();
 
         List<T> results = new();
-
-        // Collect search results
         await foreach (SearchResult<T> result in response.Value.GetResultsAsync())
         {
-            if (result.Score > .85)
+            if (idSet.Contains(result.Document.ChunkId))
             {
                 results.Add(result.Document);
             }

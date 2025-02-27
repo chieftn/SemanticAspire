@@ -1,16 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 
-class TroubleshootDataModel
+class TroubleshootDataModel : BaseModel
 {
-    [JsonPropertyName("chunk_id")]
-    public string? ChunkId { get; set; }
-
-    [JsonPropertyName("parent_id")]
-    public string? ParentId { get; set; }
-
-    [JsonPropertyName("chunk")]
-    public string? Chunk { get; set; }
-
     [JsonPropertyName("title")]
     public string? Title { get; set; }
 

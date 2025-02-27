@@ -29,12 +29,10 @@ class IcmPlugin
         CancellationToken cancellationToken = default)
     {
         var searchFields = new List<string> { "text_vector" };
-        var collection = "vector-icmjson";
+        var collection = "vector-icm-etl3";
 
         ReadOnlyMemory<float> embedding = await this._textEmbeddingGenerationService.GenerateEmbeddingAsync(query, cancellationToken: cancellationToken);
-
-        // Perform search
-        var results = await this._searchService.SearchAsync(collection, embedding, searchFields, cancellationToken) ?? null;
+        var results = await this._searchService.SearchAsync(collection, embedding, query, searchFields, cancellationToken) ?? null;
 
         var formattedResult = new System.Text.StringBuilder();
         foreach (var result in results)
@@ -42,7 +40,7 @@ class IcmPlugin
             formattedResult.AppendLine(
                 $"""
                     Incident:
-                    ID: {result.IncidentId}
+                    ID: [{result.IncidentId}](https://portal.microsofticm.com/imp/v5/incidents/details/{result.IncidentId})
                     Title: {result.Title}
                     Type: {result.IncidentType}
                     Description: {result.Chunk}
