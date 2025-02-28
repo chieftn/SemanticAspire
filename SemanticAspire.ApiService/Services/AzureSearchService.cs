@@ -5,16 +5,18 @@ using Azure.Search.Documents.Models;
 
 namespace SemanticAspire.ApiService;
 
-interface IAzureSearchService
+interface IAzureSearchService<T> where T : BaseModel
 {
-    Task<string?> SearchAsync(
+    Task<List<T>> SearchAsync(
         string collectionName,
         ReadOnlyMemory<float> vector,
+        string query,
+        string semanticConfiguration,
         List<string>? searchFields = null,
         CancellationToken cancellationToken = default);
 }
 
-class AzureSearchService : IAzureSearchService
+class AzureSearchService<T> : IAzureSearchService<T> where T : BaseModel
 {
     private readonly List<string> _defaultVectorFields = new() { "text_vector" };
 
@@ -25,9 +27,11 @@ class AzureSearchService : IAzureSearchService
         this._indexClient = indexClient;
     }
 
-    public async Task<string?> SearchAsync(
+    public async Task<List<T>> SearchAsync(
         string collectionName,
         ReadOnlyMemory<float> vector,
+        string query,
+        string? semanticConfiguration = null,
         List<string>? searchFields = null,
         CancellationToken cancellationToken = default)
     {
@@ -41,23 +45,35 @@ class AzureSearchService : IAzureSearchService
         VectorizedQuery vectorQuery = new(vector);
         fields.ForEach(field => vectorQuery.Fields.Add(field));
 
-        SearchOptions searchOptions = new() { VectorSearch = new() { Queries = { vectorQuery } } };
+        SearchOptions searchOptions = new()
+        {
+            QueryType = SearchQueryType.Semantic,
+            VectorSearch = new()
+            {
+                Queries = { vectorQuery }
+            },
+            SemanticSearch = new SemanticSearchOptions()
+            {
+                SemanticConfigurationName = semanticConfiguration,
+                QueryCaption = new QueryCaption(QueryCaptionType.Extractive),
+                QueryAnswer = new QueryAnswer(QueryAnswerType.Extractive) { Count = 3 }
+
+            },
+        };
 
         // Perform search request
-        Response<SearchResults<DataModel>> response = await searchClient.SearchAsync<DataModel>(searchOptions, cancellationToken);
+        Response<SearchResults<T>> response = await searchClient.SearchAsync<T>(query, searchOptions, cancellationToken);
+        HashSet<string> idSet = response.Value.SemanticSearch.Answers.Select(item => item.Key).ToHashSet();
 
-        List<DataModel> results = new();
-
-        // Collect search results
-        await foreach (SearchResult<DataModel> result in response.Value.GetResultsAsync())
+        List<T> results = new();
+        await foreach (SearchResult<T> result in response.Value.GetResultsAsync())
         {
-            results.Add(result.Document);
+            if (idSet.Contains(result.Document.ChunkId))
+            {
+                results.Add(result.Document);
+            }
         }
 
-        // Return text from first result.
-        // In real applications, the logic can check document score, sort and return top N results
-        // or aggregate all results in one text.
-        // The logic and decision which text data to return should be based on business scenario.
-        return results.FirstOrDefault()?.Chunk;
+        return results;
     }
 }

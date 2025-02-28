@@ -6,39 +6,37 @@ using System.ComponentModel;
 
 namespace SemanticAspire.Plugins;
 
-class TroubleshootPlugin
+class IcmPlugin
 {
     private readonly ITextEmbeddingGenerationService _textEmbeddingGenerationService;
     private readonly IChatCompletionService _chatCompletionService;
-    private readonly IAzureSearchService<TroubleshootDataModel> _searchService;
+    private readonly IAzureSearchService<IcmDataModel> _searchService;
 
-    public TroubleshootPlugin(
+    public IcmPlugin(
         ITextEmbeddingGenerationService textEmbeddingGenerationService,
         IChatCompletionService chatCompletionService,
-        IAzureSearchService<TroubleshootDataModel> searchService)
+        IAzureSearchService<IcmDataModel> searchService)
     {
         this._textEmbeddingGenerationService = textEmbeddingGenerationService;
         this._chatCompletionService = chatCompletionService;
         this._searchService = searchService;
     }
 
-    [KernelFunction("Azure_IoT_Knowledge_Base")]
-    [Description("provides authoritivate search results for Azure IoT Operations to help troubleshoot problems")]
+    [KernelFunction("Azure_IoT_Incident")]
+    [Description("provides information about past incidents (icms) for possible answers to current problems.")]
     public async Task<string?> SearchAsync(
         string query,
         CancellationToken cancellationToken = default)
     {
         var searchFields = new List<string> { "text_vector" };
-        var collection = "vector-tsgmd";
+        var collection = "vector-icm-clusters3";
 
         ReadOnlyMemory<float> embedding = await this._textEmbeddingGenerationService.GenerateEmbeddingAsync(query, cancellationToken: cancellationToken);
-
-        // Perform search
         var results = await this._searchService.SearchAsync(
             collection,
             embedding,
             query,
-            "vector-tsgmd-semantic-configuration",
+            "vector-icm-clusters3-semantic-configuration",
             searchFields,
             cancellationToken);
 
@@ -47,10 +45,14 @@ class TroubleshootPlugin
         {
             formattedResult.AppendLine(
                 $"""
-                    # Search Result
-                    {result.Chunk}
-                    # Source
-                    {result.Title}
+                    Incident:
+                    ID: [{result.IncidentId}](https://portal.microsofticm.com/imp/v5/incidents/details/{result.IncidentId})
+                    Title: {result.Title}
+                    Type: {result.IncidentType}
+                    Description: {result.Chunk}
+                    Mitigation: {result.Mitigation}
+                    Resolution: {result.HowFixed}
+                    TSG: {result.TsgId}
                 """
             );
         }
