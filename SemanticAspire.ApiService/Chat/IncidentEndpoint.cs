@@ -90,7 +90,7 @@ internal static class IncidentEndpoint
           "https://aoai-vzac3zroquyd4.services.ai.azure.com/",
           secretClient.GetSecret("gp4-endpoint-key").Value.Value);
 
-        // builder.Plugins.AddFromType<TroubleshootPlugin>("SearchPlugin");
+        builder.Plugins.AddFromType<TroubleshootPlugin>("SearchPlugin");
         builder.Plugins.AddFromType<IcmPlugin>("IcmPlugin");
 
         Kernel kernel = builder.Build();
@@ -105,6 +105,11 @@ internal static class IncidentEndpoint
                 You do not conjecture or make up information.
                 You respond with 'I could not find any helpful info' when search results are not available.
                 You always cite sources
+                When answer questions about incidents, use the following format:
+                ## Similar incidents
+                {enter information from icm plugin}
+                ## TSG information
+                {enter any information from troubleshoot plugin}
             """;
 
         var history = await chatHistory.GetAsync<ChatHistory>(chatRequest.SessionId);

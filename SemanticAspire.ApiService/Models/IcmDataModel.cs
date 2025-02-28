@@ -5,5 +5,5 @@
     public string Mitigation { get; set; }
     public string IncidentType { get; set; }
     public string HowFixed { get; set; }
-    public int IncidentId { get; set; }
+    public Int64 IncidentId { get; set; }
 }

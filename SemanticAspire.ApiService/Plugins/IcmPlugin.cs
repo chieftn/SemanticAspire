@@ -29,10 +29,16 @@ class IcmPlugin
         CancellationToken cancellationToken = default)
     {
         var searchFields = new List<string> { "text_vector" };
-        var collection = "vector-icm-etl3";
+        var collection = "vector-icm-clusters3";
 
         ReadOnlyMemory<float> embedding = await this._textEmbeddingGenerationService.GenerateEmbeddingAsync(query, cancellationToken: cancellationToken);
-        var results = await this._searchService.SearchAsync(collection, embedding, query, searchFields, cancellationToken) ?? null;
+        var results = await this._searchService.SearchAsync(
+            collection,
+            embedding,
+            query,
+            "vector-icm-clusters3-semantic-configuration",
+            searchFields,
+            cancellationToken);
 
         var formattedResult = new System.Text.StringBuilder();
         foreach (var result in results)

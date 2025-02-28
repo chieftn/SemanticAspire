@@ -34,7 +34,13 @@ class TroubleshootPlugin
         ReadOnlyMemory<float> embedding = await this._textEmbeddingGenerationService.GenerateEmbeddingAsync(query, cancellationToken: cancellationToken);
 
         // Perform search
-        var results = await this._searchService.SearchAsync(collection, embedding, query, searchFields, cancellationToken) ?? null;
+        var results = await this._searchService.SearchAsync(
+            collection,
+            embedding,
+            query,
+            "vector-tsgmd-semantic-configuration",
+            searchFields,
+            cancellationToken);
 
         var formattedResult = new System.Text.StringBuilder();
         foreach (var result in results)

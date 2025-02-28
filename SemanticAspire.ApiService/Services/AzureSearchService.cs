@@ -47,6 +47,7 @@ class AzureSearchService<T> : IAzureSearchService<T> where T : BaseModel
 
         SearchOptions searchOptions = new()
         {
+            QueryType = SearchQueryType.Semantic,
             VectorSearch = new()
             {
                 Queries = { vectorQuery }
@@ -55,8 +56,9 @@ class AzureSearchService<T> : IAzureSearchService<T> where T : BaseModel
             {
                 SemanticConfigurationName = semanticConfiguration,
                 QueryCaption = new QueryCaption(QueryCaptionType.Extractive),
-                QueryAnswer = new QueryAnswer(QueryAnswerType.Extractive),
-            }
+                QueryAnswer = new QueryAnswer(QueryAnswerType.Extractive) { Count = 3 }
+
+            },
         };
 
         // Perform search request
