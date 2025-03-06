@@ -365,3 +365,4 @@ FodyWeavers.xsd
 SemanticAspire.React/build
 SemanticAspire.React/dist
 ETL/output
+.venv
