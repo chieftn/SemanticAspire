@@ -11,8 +11,7 @@ public class EntityModelPlugin
         string query,
         CancellationToken cancellationToken = default)
     {
-
-        await Task.Delay(2000);
-        return new EntityModel();
+        var entityModelService = new EntityModelService();
+        return await entityModelService.AcquireModelAsync(query, cancellationToken);
     }
 }

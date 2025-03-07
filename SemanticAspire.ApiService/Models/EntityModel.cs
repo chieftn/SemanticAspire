@@ -6,6 +6,8 @@ public class EntityModelNode
     public string Name { get; set; }
     public string Description { get; set; }
     public IEnumerable<string> Properties { get; set; }
+
+    public IEnumerable<string> TimeSeries { get; set; }
 }
 
 public class EntityModelRelationship
@@ -20,3 +22,4 @@ public class EntityModel
     public IEnumerable<EntityModelNode> Nodes { get; set; }
     public IEnumerable<EntityModelRelationship> Relationships { get; set; }
 }
+
