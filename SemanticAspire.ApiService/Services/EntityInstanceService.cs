@@ -681,5 +681,5 @@ public class EntityInstanceService
         };
 
         return entityInstances;
-    };
+    }
 }

@@ -38,10 +38,11 @@ namespace SemanticAspire.ApiService
                 secretClient.GetSecret("gp4-endpoint-key").Value.Value);
 
             builder.Plugins.AddFromType<EntityModelPlugin>();
+            builder.Plugins.AddFromType<EntityInstancePlugin>();
 
             Kernel kernel = builder.Build();
 
-            ChatCompletionAgent agentPretzel =
+            ChatCompletionAgent agentModel =
                 new()
                 {
                     Name = "ModelAgent",
@@ -66,6 +67,24 @@ namespace SemanticAspire.ApiService
                     Arguments = new KernelArguments(new AzureOpenAIPromptExecutionSettings() { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto() })
                 };
 
+            ChatCompletionAgent agentModelInstances =
+              new()
+              {
+                  Name = "EntityInstanceAgent",
+                  Instructions =
+                      $$$"""
+                            Your users possess an "entity instance database" to track assets in their industrial workloads.
+                            This database supplies a listing of entity instances which are real world objects modeled by entities in a 
+                            an entity model database.  You:
+                            
+                            1. figure out what entity the user is asking about.
+                            1. lookup relevant information about entity instances.
+                            1. use information about entity instances (e.g., property and time series to answer questions
+                        """,
+                  Kernel = kernel,
+                  Arguments = new KernelArguments(new AzureOpenAIPromptExecutionSettings() { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto() })
+              };
+
             var history = await chatHistory.GetAsync<ChatHistory>(chatRequest.SessionId);
 
 
@@ -78,7 +97,7 @@ namespace SemanticAspire.ApiService
             var chat = kernel.GetRequiredService<IChatCompletionService>();
 
             var response = new StringBuilder();
-            await foreach (ChatMessageContent result in agentPretzel.InvokeAsync(history))
+            await foreach (ChatMessageContent result in agentModelInstances.InvokeAsync(history))
             {
                 response.Append(result.Content);
             }
