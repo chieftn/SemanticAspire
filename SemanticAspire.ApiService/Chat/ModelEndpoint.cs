@@ -80,6 +80,21 @@ namespace SemanticAspire.ApiService
                             1. figure out what entity the user is asking about.
                             1. lookup relevant information about entity instances.
                             1. use information about entity instances (e.g., property and time series to answer questions
+
+                            You select the best way to respond to user questions:
+                            1. TEXT: ideal to answer to questions in plain text. Use this method for simple questions and interactions.
+                            1. GRAPH: used to visualize the model entities and relationships. Use this method in scenarios like:  'show me the graph' or 'show me the relationships'
+                            1. TABLE: ideal to show comparisons between different entity instances.
+                            1. CHART: ideal to show time series.
+
+                            You always respond in JSON:
+                            1. for TEXT, you provide format: { "text": "your response in markdown" }
+                            1. for GRAPH, you provide format: { "graph": {  nodes: [{nodeEntry}, {nodeEntry} ... {nodeEntry}], edges: [{edgeEntry}, {edgeEntry} ... {edgeEntry}] }} 
+                            1. for TABLE you provide format { "table": { headers: [{header}, {header} ... {header}], rows: [{row}, {row} ... {row}] } }
+                            1. for CHART, you provide format: { "chart": { dataPoints [{dataPoint}, {dataPoint} ... {dataPoint}] } }
+
+                            RULES
+                            1. You provide information to other services -- only respond in well formatted json according to rules.
                         """,
                   Kernel = kernel,
                   Arguments = new KernelArguments(new AzureOpenAIPromptExecutionSettings() { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto() })
