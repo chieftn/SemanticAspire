@@ -1,5 +1,4 @@
 import * as React from 'react';
-// import { DataGrid, DataGridRow, DataGridHeader, DataGridBody, G } from '@fluentui/react-components';
 import type { ResponseElement } from '@/shared/models/chat';
 
 export interface ResponseTableProps {
