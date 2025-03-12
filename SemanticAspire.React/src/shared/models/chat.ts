@@ -73,7 +73,17 @@ const graphSchema = z
         return { nodes: newNodes, edges: newEdges };
     });
 
-const chartSchema = z.object({});
+const chartDatumSchema = z.object({
+    x: z.string().or(z.number()),
+    y: z.string().or(z.number()),
+});
+
+const chartSchema = z.array(
+    z.object({
+        label: z.string(),
+        data: z.array(chartDatumSchema),
+    })
+);
 
 const tableSchema = z.object({
     headers: z.array(z.string()),
@@ -96,6 +106,8 @@ export type ChatResponse = z.infer<typeof chatResponseSchema>;
 export type Graph = z.infer<typeof graphSchema>;
 export type Table = z.infer<typeof tableSchema>;
 export type Text = z.infer<typeof textSchema>;
+export type Chart = z.infer<typeof chartSchema>;
+export type ChartDatum = z.infer<typeof chartDatumSchema>;
 
 export const parseChatResponse = (response?: string): ChatResponse => {
     try {

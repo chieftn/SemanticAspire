@@ -95,7 +95,7 @@ namespace SemanticAspire.ApiService
                             1. for TEXT, you provide format: { "text": "your response in markdown" }
                             1. for GRAPH, you provide format: { "graph": {  nodes: [{ id: value, name: value }, {id: value, name: value} ... {id: value, name: value}], edges: [{source: id, target: id, name: name }, {source: id, target: id, name: name} ... {source: id, target: id, name: name}] }} 
                             1. for TABLE you provide format { "table": { headers: [{header1}, {header2} ... {header}], rows: [{ header1: value, header2: value}, {header1: value, header2: value} ... {header1: value, header2: value}] } }
-                            1. for CHART, you provide format: { "chart": { dataPoints [{dataPoint}, {dataPoint} ... {dataPoint}] } }
+                            1. for CHART, you provide format: { "chart": [{ label: seriesName, data: [{x: value, y: value} ... {x: value, y: value}]}, { label: seriesName, data: [{x: value, y: value} ... {x: value, y: value}]} }
 
                           
                         """,
