@@ -28,6 +28,7 @@ const graphSchema = z
         ),
         edges: z.array(
             z.object({
+                name: z.string(),
                 source: z.number(),
                 target: z.number(),
             })
@@ -64,6 +65,7 @@ const graphSchema = z
 
         const newEdges: Edge[] = edges.map((edge, i) => ({
             id: i.toString(),
+            label: edge.name,
             target: edge.target.toString(),
             source: edge.source.toString(),
         }));
