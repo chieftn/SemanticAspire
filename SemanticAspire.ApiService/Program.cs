@@ -27,6 +27,7 @@ app.MapChatEndpoints();
 app.MapPretzelAgentsEndpoints();
 app.MapPretzelAgentEndpoints();
 app.MapIncidentEndpoints();
+app.MapModelAgentEndpoints();
 app.MapDefaultEndpoints();
 
 app.Run();
