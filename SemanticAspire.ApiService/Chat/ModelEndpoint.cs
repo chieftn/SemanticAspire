@@ -73,6 +73,10 @@ namespace SemanticAspire.ApiService
                   Name = "EntityInstanceAgent",
                   Instructions =
                       $$$"""
+                            RULES
+                            1. respond only in json, no markdown.
+
+                            PREFACE
                             Your users possess an "entity instance database" to track assets in their industrial workloads.
                             This database supplies a listing of entity instances which are real world objects modeled by entities in a 
                             an entity model database.  You:
@@ -90,19 +94,21 @@ namespace SemanticAspire.ApiService
                             You always respond in JSON:
                             1. for TEXT, you provide format: { "text": "your response in markdown" }
                             1. for GRAPH, you provide format: { "graph": {  nodes: [{nodeEntry}, {nodeEntry} ... {nodeEntry}], edges: [{edgeEntry}, {edgeEntry} ... {edgeEntry}] }} 
-                            1. for TABLE you provide format { "table": { headers: [{header}, {header} ... {header}], rows: [{row}, {row} ... {row}] } }
+                            1. for TABLE you provide format { "table": { headers: [{header1}, {header2} ... {header}], rows: [{ header1: value, header2: value}, {header1: value, header2: value} ... {header1: value, header2: value}] } }
                             1. for CHART, you provide format: { "chart": { dataPoints [{dataPoint}, {dataPoint} ... {dataPoint}] } }
 
-                            RULES
-                            1. You provide information to other services -- only respond in well formatted json according to rules.
+                          
                         """,
                   Kernel = kernel,
                   Arguments = new KernelArguments(new AzureOpenAIPromptExecutionSettings() { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto() })
               };
 
+            var executionSettings = new AzureOpenAIPromptExecutionSettings()
+            {
+                ResponseFormat = "json_object"
+            };
+
             var history = await chatHistory.GetAsync<ChatHistory>(chatRequest.SessionId);
-
-
             if (history == null)
             {
                 history = new ChatHistory();
