@@ -42,31 +42,6 @@ namespace SemanticAspire.ApiService
 
             Kernel kernel = builder.Build();
 
-            ChatCompletionAgent agentModel =
-                new()
-                {
-                    Name = "ModelAgent",
-                    Instructions =
-                        $$$"""
-                            Your users possess an "entity database" to track assets in their industrial workloads.
-                            Example entities for a large scale bakery might include: 
-                                1. Mixer
-                                1. Proofer
-                                1. Conveyer
-                                1. Tensioner
-                            Entities also have a relationships. Example:
-                                1. Conveyer hasComponent Rollerset
-                                1. Production line contains oven.
-                           
-                            You:
-                                1. Look for clues about the type of entity the customer wants to examine.
-                                1. Extract the entity types and query them in the database.
-                                1. Answer questions about the entities and relationships.
-                        """,
-                    Kernel = kernel,
-                    Arguments = new KernelArguments(new AzureOpenAIPromptExecutionSettings() { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto() })
-                };
-
             ChatCompletionAgent agentModelInstances =
               new()
               {
@@ -123,10 +98,15 @@ namespace SemanticAspire.ApiService
                 response.Append(result.Content);
             }
 
+            var responseString = response.ToString();
+            responseString = responseString.TrimEnd("```".ToCharArray());
+            responseString = responseString.TrimStart("```json".ToCharArray());
+
+
             return Results.Ok(new
             {
                 prompt = chatRequest.Prompt,
-                response = response.ToString()
+                response = responseString
             });
         }
     }

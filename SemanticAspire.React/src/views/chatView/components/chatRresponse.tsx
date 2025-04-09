@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { makeStyles, tokens } from '@fluentui/react-components';
+import { makeStyles, tokens, Button } from '@fluentui/react-components';
 import type { Prompt } from '@/shared/models/chat';
 import { useChatInteractionQuery } from '../data/useChatInteractionQuery';
 import { ChatResponseError } from './chatResponseError';
@@ -8,6 +8,8 @@ import { ResponseChart } from './responseChart';
 import { ResponseGraph } from './responseGraph';
 import { ResponseMarkdown } from './responseMarkdown';
 import { ResponseTable } from './responseTable';
+import { useResponseCache } from '@/shared/hooks/useResponseCache';
+import { RetainButton } from './retainButton';
 
 export const useStyles = makeStyles({
     rootStyle: {
@@ -26,6 +28,13 @@ export interface ChatResponseProps {
 export const ChatResponse: React.FC<ChatResponseProps> = ({ prompt }) => {
     const { rootStyle, nameStyle } = useStyles();
     const { data, status } = useChatInteractionQuery(prompt);
+    const { addResponse } = useResponseCache();
+
+    const onRetain = (name: string) => {
+        if (data) {
+            addResponse(data, name);
+        }
+    };
 
     return (
         <div className={rootStyle}>
@@ -33,15 +42,19 @@ export const ChatResponse: React.FC<ChatResponseProps> = ({ prompt }) => {
             <div>
                 {status === 'error' && <ChatResponseError />}
                 {status === 'pending' && <ChatResponsePending />}
-                {status === 'success' &&
-                    data.map((element) => (
-                        <>
-                            <ResponseMarkdown responseElement={element} />
-                            <ResponseChart responseElement={element} />
-                            <ResponseGraph responseElement={element} />
-                            <ResponseTable responseElement={element} />
-                        </>
-                    ))}
+                {status === 'success' && (
+                    <>
+                        {data.map((element) => (
+                            <>
+                                <ResponseMarkdown responseElement={element} />
+                                <ResponseChart responseElement={element} />
+                                <ResponseGraph responseElement={element} />
+                                <ResponseTable responseElement={element} />
+                            </>
+                        ))}
+                        <RetainButton onRetain={onRetain} />
+                    </>
+                )}
             </div>
         </div>
     );

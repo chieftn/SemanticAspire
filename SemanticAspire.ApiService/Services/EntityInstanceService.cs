@@ -68,7 +68,7 @@ public class EntityInstanceService
             {
                 Id = 1001,
                 EntityType = 1,
-                Name = "VAT in Production Line A",
+                Name = "VAT a-1",
                 Properties = new Dictionary<string, double> {
                     ["Volume Capacity"] = 40.73,
                     ["Temperature"] = 53.94,
@@ -112,7 +112,7 @@ public class EntityInstanceService
             {
                 Id = 1002,
                 EntityType = 2,
-                Name = "Oven in Production Line A",
+                Name = "Oven a-2",
                 Properties = new Dictionary<string, double> {
                     ["Max Temperature"] = 64.25,
                     ["Energy Consumption"] = 72.72,
@@ -156,7 +156,7 @@ public class EntityInstanceService
             {
                 Id = 1003,
                 EntityType = 3,
-                Name = "Extruder in Production Line A",
+                Name = "Extruder a7",
                 Properties = new Dictionary<string, double> {
                     ["Pressure"] = 80.23,
                     ["Flow Rate"] = 92.55,
@@ -200,7 +200,7 @@ public class EntityInstanceService
             {
                 Id = 1004,
                 EntityType = 4,
-                Name = "Conveyor in Production Line A",
+                Name = "Conveyor ExtraA",
                 Properties = new Dictionary<string, double> {
                     ["Speed"] = 82.76,
                     ["Load Capacity"] = 27.59,

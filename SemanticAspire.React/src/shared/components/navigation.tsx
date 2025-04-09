@@ -54,6 +54,9 @@ export const Navigation: React.FC = () => {
                     <NavItem icon={<PerformanceReviews />} value="/modelAgent">
                         Model guide
                     </NavItem>
+                    <NavItem icon={<PerformanceReviews />} value="/responseCache">
+                        My data canvas
+                    </NavItem>
                 </NavDrawerBody>
             </NavDrawer>
             {!open && renderHamburgerWithToolTip('banner')}

@@ -11,6 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as ResponseCacheImport } from './routes/responseCache'
 import { Route as PretzelAgentsImport } from './routes/pretzelAgents'
 import { Route as PretzelAgentImport } from './routes/pretzelAgent'
 import { Route as ModelAgentImport } from './routes/modelAgent'
@@ -18,6 +19,12 @@ import { Route as IncidentAgentImport } from './routes/incidentAgent'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
+
+const ResponseCacheRoute = ResponseCacheImport.update({
+  id: '/responseCache',
+  path: '/responseCache',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const PretzelAgentsRoute = PretzelAgentsImport.update({
   id: '/pretzelAgents',
@@ -88,6 +95,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PretzelAgentsImport
       parentRoute: typeof rootRoute
     }
+    '/responseCache': {
+      id: '/responseCache'
+      path: '/responseCache'
+      fullPath: '/responseCache'
+      preLoaderRoute: typeof ResponseCacheImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -99,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/modelAgent': typeof ModelAgentRoute
   '/pretzelAgent': typeof PretzelAgentRoute
   '/pretzelAgents': typeof PretzelAgentsRoute
+  '/responseCache': typeof ResponseCacheRoute
 }
 
 export interface FileRoutesByTo {
@@ -107,6 +122,7 @@ export interface FileRoutesByTo {
   '/modelAgent': typeof ModelAgentRoute
   '/pretzelAgent': typeof PretzelAgentRoute
   '/pretzelAgents': typeof PretzelAgentsRoute
+  '/responseCache': typeof ResponseCacheRoute
 }
 
 export interface FileRoutesById {
@@ -116,6 +132,7 @@ export interface FileRoutesById {
   '/modelAgent': typeof ModelAgentRoute
   '/pretzelAgent': typeof PretzelAgentRoute
   '/pretzelAgents': typeof PretzelAgentsRoute
+  '/responseCache': typeof ResponseCacheRoute
 }
 
 export interface FileRouteTypes {
@@ -126,6 +143,7 @@ export interface FileRouteTypes {
     | '/modelAgent'
     | '/pretzelAgent'
     | '/pretzelAgents'
+    | '/responseCache'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -133,6 +151,7 @@ export interface FileRouteTypes {
     | '/modelAgent'
     | '/pretzelAgent'
     | '/pretzelAgents'
+    | '/responseCache'
   id:
     | '__root__'
     | '/'
@@ -140,6 +159,7 @@ export interface FileRouteTypes {
     | '/modelAgent'
     | '/pretzelAgent'
     | '/pretzelAgents'
+    | '/responseCache'
   fileRoutesById: FileRoutesById
 }
 
@@ -149,6 +169,7 @@ export interface RootRouteChildren {
   ModelAgentRoute: typeof ModelAgentRoute
   PretzelAgentRoute: typeof PretzelAgentRoute
   PretzelAgentsRoute: typeof PretzelAgentsRoute
+  ResponseCacheRoute: typeof ResponseCacheRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -157,6 +178,7 @@ const rootRouteChildren: RootRouteChildren = {
   ModelAgentRoute: ModelAgentRoute,
   PretzelAgentRoute: PretzelAgentRoute,
   PretzelAgentsRoute: PretzelAgentsRoute,
+  ResponseCacheRoute: ResponseCacheRoute,
 }
 
 export const routeTree = rootRoute
@@ -173,7 +195,8 @@ export const routeTree = rootRoute
         "/incidentAgent",
         "/modelAgent",
         "/pretzelAgent",
-        "/pretzelAgents"
+        "/pretzelAgents",
+        "/responseCache"
       ]
     },
     "/": {
@@ -190,6 +213,9 @@ export const routeTree = rootRoute
     },
     "/pretzelAgents": {
       "filePath": "pretzelAgents.tsx"
+    },
+    "/responseCache": {
+      "filePath": "responseCache.tsx"
     }
   }
 }
